@@ -59,10 +59,10 @@ export default function LandingPage() {
         <Center max={560}>
           <div className="fu1" style={{ position: "relative" }}><Gromi size={120} /></div>
           <h1 className="fu2" style={{ fontSize: "clamp(28px, 7vw, 44px)", fontWeight: 800, lineHeight: 1.15, marginTop: 16, position: "relative" }}>
-            « Est-ce que mon enfant<br />se développe bien ? »
+            « Est-ce que mon enfant<br />se développe <span style={{ color: "#D4845A" }}>bien</span> ? »
           </h1>
           <p className="fu3" style={{ fontSize: 17, color: "#8A7F76", marginTop: 14, lineHeight: 1.6, position: "relative" }}>
-            Vous vous posez cette question. Tous les parents se la posent. De la naissance jusqu'à 12 ans, <strong style={{ color: "#3D3530" }}>Gromi</strong> vous donne la réponse — et les outils pour l'accompagner à chaque étape.
+            Vous vous posez cette question. Tous les parents se la posent. De la naissance jusqu'à 12 ans, <strong style={{ color: "#D4845A", fontWeight: 800 }}>Gromi</strong> vous donne la réponse — et les outils pour l'accompagner à chaque étape.
           </p>
           <div className="fu4" style={{ marginTop: 28, position: "relative" }}>
             <EmailBox />
@@ -71,6 +71,25 @@ export default function LandingPage() {
         </Center>
       </Section>
 
+      {/* ============ STAT CHOC ============ */}
+      <div style={{ background: "#3D3530", padding: "44px 24px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", width: 200, height: 200, borderRadius: "50%", background: "#D4845A", opacity: 0.08, top: -60, left: -60 }} />
+        <div style={{ position: "absolute", width: 150, height: 150, borderRadius: "50%", background: "#F5D8C4", opacity: 0.06, bottom: -40, right: -40 }} />
+        <Center max={520}>
+          <div style={{ fontSize: "clamp(72px, 18vw, 110px)", fontWeight: 800, color: "#F5D8C4", lineHeight: 1, letterSpacing: "-2px" }}>
+            1 sur 5
+          </div>
+          <div style={{ fontSize: "clamp(17px, 4vw, 22px)", fontWeight: 800, color: "#FFFFFF", marginTop: 10, lineHeight: 1.3 }}>
+            enfants a des difficultés de développement.
+          </div>
+          <div style={{ width: 48, height: 3, background: "#D4845A", borderRadius: 2, margin: "16px auto" }} />
+          <div style={{ fontSize: 15, color: "#A09A92", lineHeight: 1.7 }}>
+            La plupart ne sont détectées qu'à l'école —{" "}
+            <strong style={{ color: "#F5D8C4" }}>souvent trop tard.</strong>
+          </div>
+        </Center>
+      </div>
+
       {/* ============ LES DOUTES ============ */}
       <Section bg="#fff">
         <Center>
@@ -78,19 +97,19 @@ export default function LandingPage() {
             Vous reconnaissez-vous ?
           </h2>
           {[
-            { q: "« Les enfants de mes amies marchent déjà, pas le mien… »", a: "Chaque enfant a son rythme. Mais savoir OÙ il en est et QUOI faire pour l'accompagner, ça change tout.", e: "😟" },
-            { q: "« Il ne tient pas en place, il n'arrive pas à se concentrer »", a: "Ce n'est peut-être pas un problème de comportement — c'est peut-être un besoin psychomoteur non comblé.", e: "🤯" },
-            { q: "« En CE2 son écriture est illisible, il déteste écrire »", a: "L'écriture c'est de la motricité fine + du tonus + de la coordination. Des exercices ciblés peuvent tout débloquer.", e: "✏️" },
-            { q: "« Je ne sais pas si je stimule assez mon enfant »", a: "Pas besoin d'être experte. 10 minutes par jour d'activité adaptée font une vraie différence, à tout âge.", e: "😰" },
-            { q: "« En CM1 il est maladroit, il se cogne partout, il casse tout »", a: "La maladresse n'est pas un trait de caractère — c'est un schéma corporel et une coordination qui se travaillent.", e: "💥" },
-            { q: "« Le pédiatre dit que tout va bien mais j'ai un doute »", a: "Le pédiatre vérifie la santé. La psychomotricité, c'est le développement global. Ce n'est pas la même chose.", e: "🤔" },
+            { q: "« Les enfants de mes amies marchent déjà, pas le mien… »", a: <span>Chaque enfant a son rythme. Mais <strong style={{color:"#D4845A"}}>savoir OÙ il en est et QUOI faire</strong> pour l'accompagner, ça change tout.</span>, e: "😟" },
+            { q: "« Il ne tient pas en place, il n'arrive pas à se concentrer »", a: <span>Ce n'est peut-être pas un problème de comportement — c'est peut-être <strong style={{color:"#D4845A"}}>un besoin psychomoteur non comblé.</strong></span>, e: "🤯" },
+            { q: "« En CE2 son écriture est illisible, il déteste écrire »", a: <span>L'écriture c'est motricité fine + tonus + coordination. <strong style={{color:"#D4845A"}}>Des exercices ciblés peuvent tout débloquer.</strong></span>, e: "✏️" },
+            { q: "« Je ne sais pas si je stimule assez mon enfant »", a: <span>Pas besoin d'être experte. <strong style={{color:"#D4845A"}}>10 minutes par jour</strong> d'activité adaptée font une vraie différence, à tout âge.</span>, e: "😰" },
+            { q: "« En CM1 il est maladroit, il se cogne partout, il casse tout »", a: <span>La maladresse n'est pas un trait de caractère — <strong style={{color:"#D4845A"}}>c'est un schéma corporel et une coordination qui se travaillent.</strong></span>, e: "💥" },
+            { q: "« Le pédiatre dit que tout va bien mais j'ai un doute »", a: <span>Le pédiatre vérifie la santé. <strong style={{color:"#D4845A"}}>La psychomotricité, c'est le développement global.</strong> Ce n'est pas la même chose.</span>, e: "🤔" },
           ].map((item, i) => (
             <div key={i} style={{ background: "#FDF8F2", borderRadius: 20, padding: "20px 22px", marginBottom: 12 }}>
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                 <span style={{ fontSize: 28, flexShrink: 0, marginTop: 2 }}>{item.e}</span>
                 <div>
                   <div style={{ fontSize: 15, fontWeight: 800, color: "#3D3530", fontStyle: "italic", lineHeight: 1.4 }}>{item.q}</div>
-                  <div style={{ fontSize: 13, color: "#8A7F76", marginTop: 6, lineHeight: 1.6 }}>{item.a}</div>
+                  <div style={{ fontSize: 13, color: "#5C544F", marginTop: 6, lineHeight: 1.7 }}>{item.a}</div>
                 </div>
               </div>
             </div>
@@ -124,13 +143,32 @@ export default function LandingPage() {
             }}>
               <div style={{ width: 50, height: 50, borderRadius: 16, background: f.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, flexShrink: 0 }}>{f.icon}</div>
               <div>
-                <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 4 }}>{f.title}</div>
-                <div style={{ fontSize: 13, color: "#8A7F76", lineHeight: 1.6 }}>{f.desc}</div>
+                <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 4, color: "#3D3530" }}>{f.title}</div>
+                <div style={{ fontSize: 13, color: "#5C544F", lineHeight: 1.7 }}>{f.desc}</div>
               </div>
             </div>
           ))}
         </Center>
       </Section>
+
+      {/* ============ SCREENSHOTS ============ */}
+      <div style={{ background: "#2A2320", padding: "48px 24px", textAlign: "center" }}>
+        <Center max={640}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(212,132,90,0.2)", borderRadius: 20, padding: "6px 16px", marginBottom: 16 }}>
+            <span style={{ fontSize: 14 }}>📱</span>
+            <span style={{ fontWeight: 700, fontSize: 12, color: "#F5D8C4" }}>L'application en vrai</span>
+          </div>
+          <h2 style={{ fontSize: "clamp(20px, 5vw, 26px)", fontWeight: 800, color: "#FFFFFF", lineHeight: 1.3, marginBottom: 8 }}>
+            Activité du jour · Progression · Bilan
+          </h2>
+          <p style={{ fontSize: 13, color: "#7A6F68", marginBottom: 24 }}>Tout en 10 minutes par jour</p>
+          <img
+            src="/screen2.png"
+            alt="Aperçu de l'application Gromi — 4 écrans"
+            style={{ width: "100%", maxWidth: 580, borderRadius: 20, boxShadow: "0 12px 40px rgba(0,0,0,0.4)", display: "block", margin: "0 auto" }}
+          />
+        </Center>
+      </div>
 
       {/* ============ TÉMOIGNAGES (fictifs pour le prototype) ============ */}
       <Section bg="#fff">
@@ -146,7 +184,7 @@ export default function LandingPage() {
           ].map((t, i) => (
             <div key={i} style={{ background: "#FDF8F2", borderRadius: 20, padding: "20px 22px", marginBottom: 10 }}>
               <div style={{ fontSize: 14, color: orange, marginBottom: 4 }}>{"★".repeat(t.stars)}</div>
-              <div style={{ fontSize: 14, color: "#3D3530", lineHeight: 1.6, fontStyle: "italic", marginBottom: 8 }}>« {t.text} »</div>
+              <div style={{ fontSize: 14, color: "#3D3530", lineHeight: 1.7, fontStyle: "italic", marginBottom: 8, borderLeft: "3px solid #F5D8C4", paddingLeft: 12 }}>« {t.text} »</div>
               <div style={{ fontSize: 12, fontWeight: 700, color: "#8A7F76" }}>— {t.name}</div>
             </div>
           ))}
@@ -168,7 +206,7 @@ export default function LandingPage() {
           ].map((item, i) => (
             <div key={i} style={{ background: "#fff", borderRadius: 20, padding: "18px 20px", marginBottom: 8, boxShadow: "0 2px 10px rgba(180,160,140,0.08)" }}>
               <div style={{ fontSize: 14, fontWeight: 800, color: "#3D3530", marginBottom: 6 }}>{item.q}</div>
-              <div style={{ fontSize: 13, color: "#8A7F76", lineHeight: 1.6 }}>{item.a}</div>
+              <div style={{ fontSize: 13, color: "#5C544F", lineHeight: 1.7 }}>{item.a}</div>
             </div>
           ))}
         </Center>
@@ -183,7 +221,7 @@ export default function LandingPage() {
             <p style={{ fontSize: 14, color: "#8A7F76", lineHeight: 1.7 }}>
               Psychomotricienne diplômée d'État, j'accompagne les enfants et leurs parents depuis des années. Sur TikTok (<strong>Club Ludique</strong>, 90 000 abonnés), je partage déjà mes conseils au quotidien. Gromi, c'est tout ce que je sais — condensé dans une app qui s'adapte à votre enfant.
             </p>
-            <p style={{ fontSize: 14, color: "#3D3530", fontWeight: 700, marginTop: 12 }}>
+            <p style={{ fontSize: 14, color: "#FFFFFF", fontWeight: 800, marginTop: 16, background: "#D4845A", borderRadius: 14, padding: "12px 18px", lineHeight: 1.5 }}>
               Chaque activité de Gromi, c'est ce que je ferais si votre enfant était dans mon cabinet.
             </p>
           </div>
