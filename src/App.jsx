@@ -37,31 +37,55 @@ const Carousel = ({ screens }) => {
     setOffset(0);
   };
 
+  const ArrowBtn = ({ dir }) => {
+    const isLeft = dir === "left";
+    const disabled = isLeft ? current === 0 : current === screens.length - 1;
+    return (
+      <button onClick={() => goTo(current + (isLeft ? -1 : 1))} disabled={disabled} style={{
+        position: "absolute", top: "50%", transform: "translateY(-50%)",
+        [isLeft ? "left" : "right"]: -20,
+        width: 36, height: 36, borderRadius: "50%", border: "none",
+        background: disabled ? "#EDE6DE" : "#fff",
+        boxShadow: disabled ? "none" : "0 2px 10px rgba(0,0,0,0.12)",
+        cursor: disabled ? "default" : "pointer",
+        fontSize: 16, color: disabled ? "#C4BAB0" : "#3D3530",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        zIndex: 2, transition: "all 0.2s",
+      }}>
+        {isLeft ? "←" : "→"}
+      </button>
+    );
+  };
+
   return (
-    <div>
-      <div
-        style={{ overflow: "hidden", borderRadius: 20, cursor: "grab", userSelect: "none", touchAction: "pan-y" }}
-        onMouseDown={(e) => onStart(e.clientX)}
-        onMouseMove={(e) => onMove(e.clientX)}
-        onMouseUp={onEnd}
-        onMouseLeave={onEnd}
-        onTouchStart={(e) => onStart(e.touches[0].clientX)}
-        onTouchMove={(e) => onMove(e.touches[0].clientX)}
-        onTouchEnd={onEnd}
-      >
-        <div style={{
-          display: "flex",
-          transform: `translateX(calc(${-current * 100}% + ${offset}px))`,
-          transition: offset === 0 ? "transform 0.35s cubic-bezier(.4,0,.2,1)" : "none",
-        }}>
-          {screens.map((src, i) => (
-            <div key={i} style={{ minWidth: "100%", borderRadius: 20, overflow: "hidden", background: "#1A1614" }}>
-              <img src={src} alt={`Écran Gromi ${i + 1}`} style={{ width: "100%", display: "block", pointerEvents: "none" }} />
-            </div>
-          ))}
+    <div style={{ maxWidth: 260, margin: "0 auto" }}>
+      <div style={{ position: "relative" }}>
+        <ArrowBtn dir="left" />
+        <ArrowBtn dir="right" />
+        <div
+          style={{ overflow: "hidden", borderRadius: 24, cursor: "grab", userSelect: "none", touchAction: "pan-y" }}
+          onMouseDown={(e) => onStart(e.clientX)}
+          onMouseMove={(e) => onMove(e.clientX)}
+          onMouseUp={onEnd}
+          onMouseLeave={onEnd}
+          onTouchStart={(e) => onStart(e.touches[0].clientX)}
+          onTouchMove={(e) => onMove(e.touches[0].clientX)}
+          onTouchEnd={onEnd}
+        >
+          <div style={{
+            display: "flex",
+            transform: `translateX(calc(${-current * 100}% + ${offset}px))`,
+            transition: offset === 0 ? "transform 0.35s cubic-bezier(.4,0,.2,1)" : "none",
+          }}>
+            {screens.map((src, i) => (
+              <div key={i} style={{ minWidth: "100%", background: "#1A1614" }}>
+                <img src={src} alt={`Écran Gromi ${i + 1}`} style={{ width: "100%", display: "block", pointerEvents: "none" }} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 16 }}>
+      <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 14 }}>
         {screens.map((_, i) => (
           <button key={i} onClick={() => goTo(i)} style={{
             width: i === current ? 24 : 8, height: 8,
@@ -229,7 +253,7 @@ export default function LandingPage() {
             </h2>
             <p style={{ fontSize: 13, color: "#8A7F76", marginTop: 6 }}>Glissez pour voir les écrans</p>
           </div>
-          <Carousel screens={["/phone_1.png", "/phone_2.png", "/phone_3.png", "/phone_4.png", "/screen3.png"]} />
+          <Carousel screens={["/phone_1.png", "/phone_2.png", "/phone_3.png", "/phone_4.png"]} />
         </Center>
       </Section>
 
