@@ -229,7 +229,7 @@ export default function LandingPage() {
             </h2>
             <p style={{ fontSize: 13, color: "#8A7F76", marginTop: 6 }}>Glissez pour voir les écrans</p>
           </div>
-          <Carousel screens={["/screen3.png", "/screen2.png", "/screen4.png", "/screen5.png"]} />
+          <Carousel screens={["/phone_1.png", "/phone_2.png", "/phone_3.png", "/phone_4.png", "/screen3.png"]} />
         </Center>
       </Section>
 
