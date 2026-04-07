@@ -72,20 +72,23 @@ export default function LandingPage() {
       </Section>
 
       {/* ============ STAT CHOC ============ */}
-      <div style={{ background: "#3D3530", padding: "44px 24px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", width: 200, height: 200, borderRadius: "50%", background: "#D4845A", opacity: 0.08, top: -60, left: -60 }} />
-        <div style={{ position: "absolute", width: 150, height: 150, borderRadius: "50%", background: "#F5D8C4", opacity: 0.06, bottom: -40, right: -40 }} />
-        <Center max={520}>
-          <div style={{ fontSize: "clamp(72px, 18vw, 110px)", fontWeight: 800, color: "#F5D8C4", lineHeight: 1, letterSpacing: "-2px" }}>
-            1 sur 5
-          </div>
-          <div style={{ fontSize: "clamp(17px, 4vw, 22px)", fontWeight: 800, color: "#FFFFFF", marginTop: 10, lineHeight: 1.3 }}>
-            enfants a des difficultés de développement.
-          </div>
-          <div style={{ width: 48, height: 3, background: "#D4845A", borderRadius: 2, margin: "16px auto" }} />
-          <div style={{ fontSize: 15, color: "#A09A92", lineHeight: 1.7 }}>
-            La plupart ne sont détectées qu'à l'école —{" "}
-            <strong style={{ color: "#F5D8C4" }}>souvent trop tard.</strong>
+      <div style={{ background: "#FFF8F2", borderTop: "1px solid #EDE6DE", borderBottom: "1px solid #EDE6DE", padding: "40px 24px" }}>
+        <Center max={540}>
+          <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", justifyContent: "center" }}>
+            <div style={{ textAlign: "center", flexShrink: 0 }}>
+              <div style={{ fontSize: "clamp(64px, 16vw, 100px)", fontWeight: 800, color: "#D4845A", lineHeight: 1, letterSpacing: "-2px" }}>1/5</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#C4BAB0", letterSpacing: "2px", textTransform: "uppercase", marginTop: 4 }}>enfants</div>
+            </div>
+            <div style={{ width: 2, height: 80, background: "#EDE6DE", flexShrink: 0, display: "none" }} />
+            <div style={{ textAlign: "left", maxWidth: 320 }}>
+              <div style={{ fontSize: "clamp(16px, 4vw, 20px)", fontWeight: 800, color: "#3D3530", lineHeight: 1.35 }}>
+                a des difficultés de développement.
+              </div>
+              <div style={{ fontSize: 14, color: "#8A7F76", marginTop: 10, lineHeight: 1.7 }}>
+                La plupart ne sont détectées qu'à l'école —{" "}
+                <strong style={{ color: "#D4845A", fontWeight: 800 }}>souvent trop tard.</strong>
+              </div>
+            </div>
           </div>
         </Center>
       </div>
@@ -152,23 +155,31 @@ export default function LandingPage() {
       </Section>
 
       {/* ============ SCREENSHOTS ============ */}
-      <div style={{ background: "#2A2320", padding: "48px 24px", textAlign: "center" }}>
+      <Section bg="#fff">
         <Center max={640}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(212,132,90,0.2)", borderRadius: 20, padding: "6px 16px", marginBottom: 16 }}>
-            <span style={{ fontSize: 14 }}>📱</span>
-            <span style={{ fontWeight: 700, fontSize: 12, color: "#F5D8C4" }}>L'application en vrai</span>
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#FFF0E5", borderRadius: 20, padding: "6px 16px", marginBottom: 14 }}>
+              <span style={{ fontSize: 14 }}>📱</span>
+              <span style={{ fontWeight: 700, fontSize: 12, color: "#D4845A" }}>L'application en vrai</span>
+            </div>
+            <h2 style={{ fontSize: "clamp(20px, 5vw, 26px)", fontWeight: 800, color: "#3D3530", lineHeight: 1.3 }}>
+              Activité · Progression · Bilan
+            </h2>
+            <p style={{ fontSize: 13, color: "#8A7F76", marginTop: 6 }}>Tout en 10 minutes par jour</p>
           </div>
-          <h2 style={{ fontSize: "clamp(20px, 5vw, 26px)", fontWeight: 800, color: "#FFFFFF", lineHeight: 1.3, marginBottom: 8 }}>
-            Activité du jour · Progression · Bilan
-          </h2>
-          <p style={{ fontSize: 13, color: "#7A6F68", marginBottom: 24 }}>Tout en 10 minutes par jour</p>
-          <img
-            src="/screen2.png"
-            alt="Aperçu de l'application Gromi — 4 écrans"
-            style={{ width: "100%", maxWidth: 580, borderRadius: 20, boxShadow: "0 12px 40px rgba(0,0,0,0.4)", display: "block", margin: "0 auto" }}
-          />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            {["/screen2.png", "/screen3.png", "/screen4.png", "/screen5.png"].map((src, i) => (
+              <div key={i} style={{ borderRadius: 16, overflow: "hidden", background: "#1A1614", aspectRatio: "4/3", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <img
+                  src={src}
+                  alt={`Écran Gromi ${i + 1}`}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
+                />
+              </div>
+            ))}
+          </div>
         </Center>
-      </div>
+      </Section>
 
       {/* ============ TÉMOIGNAGES (fictifs pour le prototype) ============ */}
       <Section bg="#fff">
