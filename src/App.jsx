@@ -181,7 +181,7 @@ export default function LandingPage() {
       </Section>
 
       {/* ============ STAT CHOC ============ */}
-      <div style={{ background: "#2C1810", padding: "48px 24px", textAlign: "center" }}>
+      <div style={{ background: "#C4540A", padding: "48px 24px", textAlign: "center" }}>
         <Center max={580}>
           <div style={{ fontSize: "clamp(72px, 18vw, 120px)", fontWeight: 800, color: "#F5D8C4", lineHeight: 1, letterSpacing: "-3px" }}>
             20%
@@ -339,7 +339,7 @@ export default function LandingPage() {
       </Section>
 
       {/* ============ CTA FINAL — urgence émotionnelle ============ */}
-      <Section bg="#2C1810" style={{ padding: "60px 24px 70px", textAlign: "center" }}>
+      <Section bg="#C4540A" style={{ padding: "60px 24px 70px", textAlign: "center" }}>
 
         <Center max={500}>
           <Gromi size={90} />
