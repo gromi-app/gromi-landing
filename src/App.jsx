@@ -13,29 +13,6 @@ const Blob = ({ size, color, top, left, right, bottom, opacity = 0.15 }) => (
   <div style={{ position: "absolute", width: size, height: size, borderRadius: "50%", background: color, opacity, top, left, right, bottom, filter: "blur(2px)", pointerEvents: "none" }} />
 );
 
-const PhoneShowcase = ({ screens }) => {
-  const Phone = ({ src, scale, rotate = 0, zIndex = 1 }) => (
-    <div style={{
-      flexShrink: 0,
-      width: `${scale}%`,
-      zIndex,
-      transform: `rotate(${rotate}deg)`,
-      borderRadius: "12%",
-      overflow: "hidden",
-      boxShadow: "0 24px 60px rgba(0,0,0,0.22)",
-    }}>
-      <img src={src} alt="Écran Gromi" style={{ width: "100%", display: "block" }} />
-    </div>
-  );
-
-  return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
-      <Phone src={screens[0]} scale={28} rotate={-4} />
-      <Phone src={screens[1]} scale={36} rotate={0} zIndex={2} />
-      <Phone src={screens[2]} scale={28} rotate={4} />
-    </div>
-  );
-};
 
 export default function LandingPage() {
   const [email, setEmail] = useState("");
@@ -191,7 +168,11 @@ export default function LandingPage() {
             </h2>
             <p style={{ fontSize: 13, color: "#8A7F76", marginTop: 6 }}>Glissez pour voir les écrans</p>
           </div>
-          <PhoneShowcase screens={["/phone_1.png", "/phone_3.png", "/phone_4.png"]} />
+          <img
+            src="/mockups.png"
+            alt="Aperçu de l'application Gromi"
+            style={{ width: "100%", display: "block" }}
+          />
         </Center>
       </Section>
 
