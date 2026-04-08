@@ -84,32 +84,20 @@ const Carousel = ({ screens }) => {
   );
 };
 
-export default function LandingPage() {
-  const [email, setEmail] = useState("");
-  const [ageRange, setAgeRange] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const orange = "#E8944A";
-  const P = { rose: "#F2C4C4", bleu: "#B8D4E8", vert: "#B8D8B8", jaune: "#F0DCA0", peche: "#F5D8C4", lilas: "#D0C8E8" };
+const AGE_RANGES = ["0–1 an", "1–3 ans", "3–6 ans", "6–9 ans", "9–12 ans"];
+const orange = "#E8944A";
 
-  const AGE_RANGES = ["0–1 an", "1–3 ans", "3–6 ans", "6–9 ans", "9–12 ans"];
-
-  const handleSubmit = async () => {
-    if (!email.includes("@")) { setError("Adresse email invalide."); return; }
-    if (!ageRange) { setError("Sélectionnez l'âge de votre enfant."); return; }
-    setError("");
-    setLoading(true);
-    const { error: sbError } = await supabase.from("waitlist").insert({ email, child_age_range: ageRange });
-    setLoading(false);
-    if (sbError && sbError.code !== "23505") {
-      setError("Une erreur est survenue, réessayez.");
-    } else {
-      setSubmitted(true);
-    }
-  };
-
-  const EmailBox = () => !submitted ? (
+const EmailBox = ({ email, setEmail, ageRange, setAgeRange, submitted, loading, error, onSubmit }) => {
+  if (submitted) return (
+    <div style={{ background: "#E5F2E5", borderRadius: 20, padding: "18px 24px", maxWidth: 400, margin: "0 auto", display: "flex", alignItems: "center", gap: 10 }}>
+      <span style={{ fontSize: 24 }}>✅</span>
+      <div style={{ textAlign: "left" }}>
+        <div style={{ fontWeight: 800 }}>C'est noté !</div>
+        <div style={{ fontSize: 13, color: "#6BA87B" }}>On vous envoie un email dès que Gromi est dispo.</div>
+      </div>
+    </div>
+  );
+  return (
     <div style={{ maxWidth: 420, margin: "0 auto" }}>
       <p style={{ fontSize: 13, fontWeight: 700, color: "#8A7F76", marginBottom: 10, textAlign: "center" }}>
         Quel âge a votre enfant ?
@@ -120,31 +108,43 @@ export default function LandingPage() {
             padding: "8px 14px", borderRadius: 20, border: `2px solid ${ageRange === a ? orange : "#EDE6DE"}`,
             background: ageRange === a ? "#FFF0E0" : "#fff",
             color: ageRange === a ? orange : "#8A7F76",
-            fontWeight: 700, fontSize: 13, fontFamily: "inherit", cursor: "pointer",
-            transition: "all 0.2s",
+            fontWeight: 700, fontSize: 13, fontFamily: "inherit", cursor: "pointer", transition: "all 0.2s",
           }}>{a}</button>
         ))}
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
         <input type="email" placeholder="votre@email.com" value={email} onChange={e => setEmail(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && handleSubmit()}
+          onKeyDown={e => e.key === "Enter" && onSubmit()}
           style={{ flex: "1 1 200px", padding: "14px 18px", borderRadius: 14, border: "2px solid #EDE6DE", fontSize: 14, fontFamily: "inherit", fontWeight: 600, color: "#3D3530", background: "#fff", minWidth: 180 }} />
-        <button onClick={handleSubmit} disabled={loading}
+        <button onClick={onSubmit} disabled={loading}
           style={{ padding: "14px 22px", borderRadius: 14, border: "none", background: orange, color: "#fff", fontSize: 14, fontWeight: 800, fontFamily: "inherit", cursor: loading ? "wait" : "pointer", boxShadow: "0 4px 20px rgba(232,148,74,0.35)", whiteSpace: "nowrap", opacity: loading ? 0.7 : 1 }}>
           {loading ? "…" : "Je veux être prévenu 🚀"}
         </button>
       </div>
       {error && <p style={{ fontSize: 12, color: "#D4727B", marginTop: 8, textAlign: "center" }}>{error}</p>}
     </div>
-  ) : (
-    <div style={{ background: "#E5F2E5", borderRadius: 20, padding: "18px 24px", maxWidth: 400, margin: "0 auto", display: "flex", alignItems: "center", gap: 10 }}>
-      <span style={{ fontSize: 24 }}>✅</span>
-      <div style={{ textAlign: "left" }}>
-        <div style={{ fontWeight: 800 }}>C'est noté !</div>
-        <div style={{ fontSize: 13, color: "#6BA87B" }}>On vous envoie un email dès que Gromi est dispo.</div>
-      </div>
-    </div>
   );
+};
+
+export default function LandingPage() {
+  const [email, setEmail] = useState("");
+  const [ageRange, setAgeRange] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const P = { rose: "#F2C4C4", bleu: "#B8D4E8", vert: "#B8D8B8", jaune: "#F0DCA0", peche: "#F5D8C4", lilas: "#D0C8E8" };
+
+  const handleSubmit = async () => {
+    if (!email.includes("@")) { setError("Adresse email invalide."); return; }
+    if (!ageRange) { setError("Sélectionnez l'âge de votre enfant."); return; }
+    setError(""); setLoading(true);
+    const { error: sbError } = await supabase.from("waitlist").insert({ email, child_age_range: ageRange });
+    setLoading(false);
+    if (sbError && sbError.code !== "23505") setError("Une erreur est survenue, réessayez.");
+    else setSubmitted(true);
+  };
+
+  const boxProps = { email, setEmail, ageRange, setAgeRange, submitted, loading, error, onSubmit: handleSubmit };
 
   const Section = ({ children, bg = "transparent", style: sx = {} }) => (
     <section style={{ padding: "56px 24px", background: bg, position: "relative", ...sx }}>{children}</section>
@@ -173,7 +173,7 @@ export default function LandingPage() {
             Vous vous posez cette question. Tous les parents se la posent. De la naissance jusqu'à 12 ans, <strong style={{ color: "#D4845A", fontWeight: 800 }}>Gromi</strong> vous donne la réponse — et les outils pour l'accompagner à chaque étape.
           </p>
           <div className="fu4" style={{ marginTop: 28, position: "relative" }}>
-            <EmailBox />
+            <EmailBox {...boxProps} />
             <p style={{ fontSize: 12, color: "#C4BAB0", marginTop: 10 }}>Gratuit. Pas de spam. Juste un email le jour du lancement.</p>
           </div>
         </Center>
@@ -349,7 +349,7 @@ export default function LandingPage() {
             Le cerveau de votre enfant se développe à une vitesse incroyable.<br />
             <strong style={{ color: "#3D3530" }}>10 minutes par jour peuvent tout changer.</strong>
           </p>
-          <EmailBox />
+          <EmailBox {...boxProps} />
           <p style={{ fontSize: 12, color: "#C4BAB0", marginTop: 10 }}>Lancement bientôt · Inscription gratuite · Pas de spam</p>
         </Center>
       </Section>
