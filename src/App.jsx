@@ -78,7 +78,7 @@ const Carousel = ({ screens }) => {
             transition: offset === 0 ? "transform 0.35s cubic-bezier(.4,0,.2,1)" : "none",
           }}>
             {screens.map((src, i) => (
-              <div key={i} style={{ minWidth: "100%", background: "#1A1614" }}>
+              <div key={i} style={{ minWidth: "100%" }}>
                 <img src={src} alt={`Écran Gromi ${i + 1}`} style={{ width: "100%", display: "block", pointerEvents: "none" }} />
               </div>
             ))}
