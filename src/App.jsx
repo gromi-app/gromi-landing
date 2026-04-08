@@ -168,11 +168,13 @@ export default function LandingPage() {
             </h2>
             <p style={{ fontSize: 13, color: "#8A7F76", marginTop: 6 }}>Glissez pour voir les écrans</p>
           </div>
-          <img
-            src="/mockups.png"
-            alt="Aperçu de l'application Gromi"
-            style={{ width: "100%", display: "block" }}
-          />
+          <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+            <img src="/mockup_a.png" alt="Bonjour et Activité" style={{ width: "50%", display: "block" }} />
+            <img src="/mockup_b.png" alt="Progression et Bilan" style={{ width: "50%", display: "block" }} />
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <img src="/mockup_c.png" alt="Bilan de Chloé" style={{ width: "35%", display: "block" }} />
+          </div>
         </Center>
       </Section>
 
