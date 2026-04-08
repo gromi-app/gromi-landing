@@ -154,7 +154,7 @@ export default function LandingPage() {
 
 
   return (
-    <div style={{ fontFamily: "'Quicksand', system-ui, sans-serif", color: "#3D3530", background: "#FDF8F2", minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'Quicksand', system-ui, sans-serif", color: "#3D3530", background: "#FFFFFF", minHeight: "100vh" }}>
       <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       <style>{`*{margin:0;padding:0;box-sizing:border-box}a{color:inherit;text-decoration:none}input:focus{outline:none}
         @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
@@ -181,29 +181,29 @@ export default function LandingPage() {
       </Section>
 
       {/* ============ STAT CHOC ============ */}
-      <div style={{ background: "#FFF8F2", borderTop: "1px solid #EDE6DE", borderBottom: "1px solid #EDE6DE", padding: "40px 24px" }}>
-        <Center max={540}>
-          <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", justifyContent: "center" }}>
-            <div style={{ textAlign: "center", flexShrink: 0 }}>
-              <div style={{ fontSize: "clamp(64px, 16vw, 100px)", fontWeight: 800, color: "#D4845A", lineHeight: 1, letterSpacing: "-2px" }}>1/5</div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#C4BAB0", letterSpacing: "2px", textTransform: "uppercase", marginTop: 4 }}>enfants</div>
+      <div style={{ background: "#2C1810", padding: "48px 24px", textAlign: "center" }}>
+        <Center max={580}>
+          <div style={{ fontSize: "clamp(72px, 18vw, 120px)", fontWeight: 800, color: "#F5D8C4", lineHeight: 1, letterSpacing: "-3px" }}>
+            20%
+          </div>
+          <div style={{ fontSize: "clamp(18px, 4vw, 24px)", fontWeight: 800, color: "#FFFFFF", marginTop: 8, lineHeight: 1.3 }}>
+            des enfants ont des difficultés de développement.
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 16, padding: "14px 24px", margin: "20px auto", maxWidth: 440 }}>
+            <div style={{ fontSize: 16, color: "#F5D8C4", fontWeight: 700, lineHeight: 1.6 }}>
+              Dans une classe de 25 élèves —{" "}
+              <strong style={{ color: "#E8944A" }}>c'est 5 enfants.</strong>
             </div>
-            <div style={{ width: 2, height: 80, background: "#EDE6DE", flexShrink: 0, display: "none" }} />
-            <div style={{ textAlign: "left", maxWidth: 320 }}>
-              <div style={{ fontSize: "clamp(16px, 4vw, 20px)", fontWeight: 800, color: "#3D3530", lineHeight: 1.35 }}>
-                a des difficultés de développement.
-              </div>
-              <div style={{ fontSize: 14, color: "#8A7F76", marginTop: 10, lineHeight: 1.7 }}>
-                La plupart ne sont détectées qu'à l'école —{" "}
-                <strong style={{ color: "#D4845A", fontWeight: 800 }}>souvent trop tard.</strong>
-              </div>
-            </div>
+          </div>
+          <div style={{ fontSize: 15, color: "#A09A92", lineHeight: 1.7 }}>
+            La plupart ne sont détectées qu'à l'école.{" "}
+            <strong style={{ color: "#F5D8C4" }}>Souvent trop tard pour agir efficacement.</strong>
           </div>
         </Center>
       </div>
 
       {/* ============ LES DOUTES ============ */}
-      <Section bg="#fff">
+      <Section bg="#FFF5F5">
         <Center>
           <h2 style={{ fontSize: 26, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>
             Vous reconnaissez-vous ?
@@ -216,7 +216,7 @@ export default function LandingPage() {
             { q: "« En CM1 il est maladroit, il se cogne partout, il casse tout »", a: <span>La maladresse n'est pas un trait de caractère — <strong style={{color:"#D4845A"}}>c'est un schéma corporel et une coordination qui se travaillent.</strong></span>, e: "💥" },
             { q: "« Le pédiatre dit que tout va bien mais j'ai un doute »", a: <span>Le pédiatre vérifie la santé. <strong style={{color:"#D4845A"}}>La psychomotricité, c'est le développement global.</strong> Ce n'est pas la même chose.</span>, e: "🤔" },
           ].map((item, i) => (
-            <div key={i} style={{ background: "#FDF8F2", borderRadius: 20, padding: "20px 22px", marginBottom: 12 }}>
+            <div key={i} style={{ background: "#FFFFFF", borderRadius: 20, padding: "20px 22px", marginBottom: 12, boxShadow: "0 2px 12px rgba(180,80,60,0.07)", border: "1px solid #FFE8E8" }}>
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                 <span style={{ fontSize: 28, flexShrink: 0, marginTop: 2 }}>{item.e}</span>
                 <div>
@@ -281,7 +281,7 @@ export default function LandingPage() {
       </Section>
 
       {/* ============ TÉMOIGNAGES (fictifs pour le prototype) ============ */}
-      <Section bg="#fff">
+      <Section bg="#F0F6FF">
         <Center>
           <h2 style={{ fontSize: 26, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>
             Ils ont testé. Ils recommandent.
@@ -292,7 +292,7 @@ export default function LandingPage() {
             { name: "Thomas, papa de Noah (8 mois)", text: "Je ne savais pas quoi faire avec un bébé. Gromi me dit exactement quoi faire chaque jour. C'est devenu notre moment père-fils.", stars: 5 },
             { name: "Claire, maman d'Adam (9 ans)", text: "Son écriture était catastrophique, il détestait les devoirs. Avec les activités de motricité fine et de coordination, il a repris confiance. Maintenant il écrit sans se plaindre.", stars: 5 },
           ].map((t, i) => (
-            <div key={i} style={{ background: "#FDF8F2", borderRadius: 20, padding: "20px 22px", marginBottom: 10 }}>
+            <div key={i} style={{ background: "#FFFFFF", borderRadius: 20, padding: "20px 22px", marginBottom: 10, boxShadow: "0 2px 12px rgba(100,140,200,0.08)" }}>
               <div style={{ fontSize: 14, color: orange, marginBottom: 4 }}>{"★".repeat(t.stars)}</div>
               <div style={{ fontSize: 14, color: "#3D3530", lineHeight: 1.7, fontStyle: "italic", marginBottom: 8, borderLeft: "3px solid #F5D8C4", paddingLeft: 12 }}>« {t.text} »</div>
               <div style={{ fontSize: 12, fontWeight: 700, color: "#8A7F76" }}>— {t.name}</div>
@@ -339,19 +339,19 @@ export default function LandingPage() {
       </Section>
 
       {/* ============ CTA FINAL — urgence émotionnelle ============ */}
-      <Section bg="#fff" style={{ padding: "60px 24px 70px", textAlign: "center" }}>
-        <Blob size={140} color={P.rose} top={-30} left={-40} opacity={0.1} />
+      <Section bg="#2C1810" style={{ padding: "60px 24px 70px", textAlign: "center" }}>
+
         <Center max={500}>
           <Gromi size={90} />
-          <h2 style={{ fontSize: 28, fontWeight: 800, marginTop: 10, lineHeight: 1.2 }}>
+          <h2 style={{ fontSize: 28, fontWeight: 800, marginTop: 10, lineHeight: 1.2, color: "#FFFFFF" }}>
             Les premières années<br />ne se rattrapent pas.
           </h2>
-          <p style={{ fontSize: 15, color: "#8A7F76", marginTop: 10, marginBottom: 24, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 15, color: "#A09A92", marginTop: 10, marginBottom: 24, lineHeight: 1.6 }}>
             Le cerveau de votre enfant se développe à une vitesse incroyable.<br />
-            <strong style={{ color: "#3D3530" }}>10 minutes par jour peuvent tout changer.</strong>
+            <strong style={{ color: "#F5D8C4" }}>10 minutes par jour peuvent tout changer.</strong>
           </p>
           <EmailBox {...boxProps} />
-          <p style={{ fontSize: 12, color: "#C4BAB0", marginTop: 10 }}>Lancement bientôt · Inscription gratuite · Pas de spam</p>
+          <p style={{ fontSize: 12, color: "#6B6560", marginTop: 10 }}>Lancement bientôt · Inscription gratuite · Pas de spam</p>
         </Center>
       </Section>
 
