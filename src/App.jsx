@@ -87,6 +87,12 @@ const Carousel = ({ screens }) => {
 const AGE_RANGES = ["0–1 an", "1–3 ans", "3–6 ans", "6–9 ans", "9–12 ans"];
 const orange = "#E8944A";
 
+const Section = ({ children, bg = "transparent", style: sx = {} }) => (
+  <section style={{ padding: "56px 24px", background: bg, position: "relative", ...sx }}>{children}</section>
+);
+
+const Center = ({ children, max = 600 }) => <div style={{ maxWidth: max, margin: "0 auto" }}>{children}</div>;
+
 const EmailBox = ({ email, setEmail, ageRange, setAgeRange, submitted, loading, error, onSubmit }) => {
   if (submitted) return (
     <div style={{ background: "#E5F2E5", borderRadius: 20, padding: "18px 24px", maxWidth: 400, margin: "0 auto", display: "flex", alignItems: "center", gap: 10 }}>
@@ -146,11 +152,6 @@ export default function LandingPage() {
 
   const boxProps = { email, setEmail, ageRange, setAgeRange, submitted, loading, error, onSubmit: handleSubmit };
 
-  const Section = ({ children, bg = "transparent", style: sx = {} }) => (
-    <section style={{ padding: "56px 24px", background: bg, position: "relative", ...sx }}>{children}</section>
-  );
-
-  const Center = ({ children, max = 600 }) => <div style={{ maxWidth: max, margin: "0 auto" }}>{children}</div>;
 
   return (
     <div style={{ fontFamily: "'Quicksand', system-ui, sans-serif", color: "#3D3530", background: "#FDF8F2", minHeight: "100vh" }}>
