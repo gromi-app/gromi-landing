@@ -183,22 +183,16 @@ export default function LandingPage() {
       {/* ============ STAT CHOC ============ */}
       <div style={{ background: "#C4540A", padding: "48px 24px", textAlign: "center" }}>
         <Center max={580}>
-          <div style={{ fontSize: "clamp(72px, 18vw, 120px)", fontWeight: 800, color: "#F5D8C4", lineHeight: 1, letterSpacing: "-3px" }}>
-            20%
+          <div style={{ fontSize: "clamp(52px, 12vw, 80px)", fontWeight: 800, color: "#FFFFFF", lineHeight: 1, letterSpacing: "-2px" }}>
+            100%
           </div>
-          <div style={{ fontSize: "clamp(18px, 4vw, 24px)", fontWeight: 800, color: "#FFFFFF", marginTop: 8, lineHeight: 1.3 }}>
-            des enfants ont des difficultés de développement.
-          </div>
-          <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 16, padding: "14px 24px", margin: "20px auto", maxWidth: 440 }}>
-            <div style={{ fontSize: 16, color: "#F5D8C4", fontWeight: 700, lineHeight: 1.6 }}>
-              Dans une classe de 25 élèves —{" "}
-              <strong style={{ color: "#E8944A" }}>c'est 5 enfants.</strong>
-            </div>
-          </div>
-          <div style={{ fontSize: 15, color: "#A09A92", lineHeight: 1.7 }}>
-            La plupart ne sont détectées qu'à l'école.{" "}
-            <strong style={{ color: "#F5D8C4" }}>Souvent trop tard pour agir efficacement.</strong>
-          </div>
+          <div style={{ width: 48, height: 4, background: "rgba(255,255,255,0.3)", borderRadius: 2, margin: "16px auto" }} />
+          <p style={{ fontSize: "clamp(15px, 3.5vw, 20px)", color: "#FFFFFF", fontWeight: 600, lineHeight: 1.7, maxWidth: 520, margin: "0 auto" }}>
+            Pendant la petite enfance, <strong style={{ fontWeight: 800 }}>100 % des apprentissages fondamentaux</strong> (lecture, écriture, concentration) dépendent d'un bon socle psychomoteur.
+          </p>
+          <p style={{ fontSize: "clamp(13px, 3vw, 16px)", color: "rgba(255,255,255,0.75)", marginTop: 16, lineHeight: 1.7 }}>
+            Pourtant, <strong style={{ color: "#FFFFFF" }}>les parents manquent d'outils pour les accompagner au quotidien.</strong>
+          </p>
         </Center>
       </div>
 
