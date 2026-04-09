@@ -180,6 +180,36 @@ export default function LandingPage() {
         </Center>
       </Section>
 
+      {/* ============ VIDÉO ============ */}
+      <Section style={{ padding: "56px 24px", textAlign: "center" }}>
+        <Center max={480}>
+          <h2 style={{ fontSize: "clamp(20px, 5vw, 28px)", fontWeight: 800, marginBottom: 8 }}>
+            Louise vous explique tout en 1 minute
+          </h2>
+          <p style={{ fontSize: 15, color: "#8A7F76", marginBottom: 28 }}>
+            Psychomotricienne D.E. &amp; créatrice de Club Ludique
+          </p>
+          <div style={{
+            position: "relative",
+            width: "100%",
+            maxWidth: 340,
+            margin: "0 auto",
+            borderRadius: 20,
+            overflow: "hidden",
+            boxShadow: "0 8px 40px rgba(180,140,100,0.18)",
+            aspectRatio: "9/16",
+          }}>
+            <iframe
+              src="https://www.youtube.com/embed/u2y3216bnSQ"
+              title="Gromi — Louise explique le concept"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+            />
+          </div>
+        </Center>
+      </Section>
+
       {/* ============ STAT CHOC ============ */}
       <div style={{ background: "#C4540A", padding: "48px 24px", textAlign: "center" }}>
         <Center max={580}>
