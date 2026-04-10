@@ -145,9 +145,43 @@ export default function LandingPage() {
     if (!ageRange) { setError("Sélectionnez l'âge de votre enfant."); return; }
     setError(""); setLoading(true);
     const { error: sbError } = await supabase.from("waitlist").insert({ email, child_age_range: ageRange });
+    if (sbError && sbError.code !== "23505") { setLoading(false); setError("Une erreur est survenue, réessayez."); return; }
+    // Envoi email de confirmation via Resend
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer re_SMo3Qmtn_L9hTc9oKJwD4vX2RUyN2SHJL" },
+      body: JSON.stringify({
+        from: "Louise - Gromi <bonjour@gromi.fr>",
+        to: [email],
+        subject: "🎉 Tu es sur la liste d'attente Gromi !",
+        html: `
+          <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #FDF8F2; border-radius: 20px; overflow: hidden;">
+            <div style="background: #D4845A; padding: 36px 32px; text-align: center;">
+              <h1 style="color: white; font-size: 28px; margin: 0; font-weight: 800;">Bienvenue sur Gromi ! 🎉</h1>
+            </div>
+            <div style="padding: 36px 32px;">
+              <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">Bonjour,</p>
+              <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">
+                Tu es bien inscrit(e) sur la liste d'attente de <strong>Gromi</strong>, l'application de suivi du développement psychomoteur de l'enfant (0–12 ans).
+              </p>
+              <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">
+                Je t'enverrai un email dès que l'application sera disponible — tu seras parmi les premiers à y avoir accès.
+              </p>
+              <p style="font-size: 16px; color: #3D3530; line-height: 1.7; margin-top: 24px;">
+                À très bientôt,<br/>
+                <strong>Louise</strong><br/>
+                <span style="color: #8A7F76; font-size: 14px;">Psychomotricienne D.E. &amp; créatrice de Gromi</span>
+              </p>
+            </div>
+            <div style="background: #FFF5F5; padding: 20px 32px; text-align: center;">
+              <p style="font-size: 13px; color: #C4BAB0; margin: 0;">Tu reçois cet email car tu t'es inscrit(e) sur <a href="https://gromi.fr" style="color: #D4845A;">gromi.fr</a></p>
+            </div>
+          </div>
+        `
+      })
+    });
     setLoading(false);
-    if (sbError && sbError.code !== "23505") setError("Une erreur est survenue, réessayez.");
-    else setSubmitted(true);
+    setSubmitted(true);
   };
 
   const boxProps = { email, setEmail, ageRange, setAgeRange, submitted, loading, error, onSubmit: handleSubmit };
