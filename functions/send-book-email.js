@@ -10,7 +10,12 @@ function isValidEmail(email) {
 
 export async function onRequestPost(context) {
   try {
-    const { email, bookTitle, downloadUrl } = await context.request.json();
+    const contentType = context.request.headers.get("content-type") ?? "";
+    const isForm = contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data");
+    const payload = isForm
+      ? Object.fromEntries(await context.request.formData())
+      : await context.request.json();
+    const { email, bookTitle, downloadUrl } = payload;
 
     if (!email || !isValidEmail(email)) {
       return new Response(JSON.stringify({ error: "Email invalide" }), { status: 400 });
@@ -75,6 +80,36 @@ export async function onRequestPost(context) {
     if (!res.ok) {
       const err = await res.text();
       return new Response(JSON.stringify({ error: err }), { status: 500 });
+    }
+
+    if (isForm) {
+      return new Response(`
+        <!doctype html>
+        <html lang="fr">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Cahier envoyé - Gromi</title>
+            <style>
+              body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#FDF8F2;color:#3D3530;display:grid;min-height:100vh;place-items:center;padding:24px}
+              main{max-width:520px;background:#fff;border-radius:26px;padding:34px;text-align:center;box-shadow:0 16px 40px rgba(120,90,60,.12)}
+              h1{font-size:30px;line-height:1.15;margin:0 0 12px}
+              p{font-size:16px;line-height:1.6;color:#7F746C;margin:0 0 22px}
+              a{display:inline-flex;background:#E8944A;color:#fff;text-decoration:none;border-radius:16px;padding:14px 20px;font-weight:800}
+            </style>
+          </head>
+          <body>
+            <main>
+              <h1>C'est envoyé !</h1>
+              <p>Votre cahier vient d'être envoyé par email. Pensez à vérifier vos spams si vous ne le voyez pas arriver.</p>
+              <a href="/">Découvrir Gromi</a>
+            </main>
+          </body>
+        </html>
+      `, {
+        status: 200,
+        headers: { "Content-Type": "text/html; charset=utf-8" },
+      });
     }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });

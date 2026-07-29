@@ -126,7 +126,8 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
     : ACTIVITY_BOOKS.filter((book) => selectedAge === "Tous les âges" || book.ageRange === selectedAge);
   const chosenBook = selectedBook && visibleBooks.some((book) => book.slug === selectedBook.slug) ? selectedBook : null;
 
-  const submitBookRequest = async () => {
+  const submitBookRequest = async (event) => {
+    event?.preventDefault();
     if (!chosenBook) { setError("Choisissez le cahier que vous voulez recevoir."); return; }
     if (!email.includes("@")) { setError("Adresse email invalide."); return; }
     setLoading(true);
@@ -259,12 +260,14 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
                 <p style={{ fontSize: 16, color: "#7F746C", lineHeight: 1.6, marginBottom: 18 }}>
                   {isBookLanding ? `Ajoutez votre email pour recevoir ${chosenBook?.title ?? "ce cahier"}.` : "Choisissez un cahier, ajoutez votre email, et je saurai exactement lequel vous envoyer."}
                 </p>
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                  <input type="email" placeholder="votre@email.com" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submitBookRequest()} style={{ flex: "1 1 260px", border: "2px solid #E9E2DB", borderRadius: 16, padding: "15px 18px", fontSize: 16, fontFamily: "inherit", fontWeight: 700, color: "#403631", background: "#fff" }} />
-                  <button onClick={submitBookRequest} disabled={loading} style={{ border: "none", borderRadius: 16, background: "#E8944A", color: "#fff", padding: "15px 24px", fontFamily: "inherit", fontSize: 16, fontWeight: 800, cursor: loading ? "wait" : "pointer", boxShadow: "0 10px 24px rgba(232,148,74,0.28)", opacity: loading ? 0.75 : 1 }}>
+                <form action="/send-book-email" method="POST" onSubmit={submitBookRequest} style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  <input type="hidden" name="bookTitle" value={chosenBook?.title ?? ""} />
+                  <input type="hidden" name="downloadUrl" value={chosenBook?.downloadUrl ?? ""} />
+                  <input type="email" name="email" required placeholder="votre@email.com" value={email} onChange={(e) => setEmail(e.target.value)} style={{ flex: "1 1 260px", border: "2px solid #E9E2DB", borderRadius: 16, padding: "15px 18px", fontSize: 16, fontFamily: "inherit", fontWeight: 700, color: "#403631", background: "#fff" }} />
+                  <button type="submit" disabled={loading} style={{ border: "none", borderRadius: 16, background: "#E8944A", color: "#fff", padding: "15px 24px", fontFamily: "inherit", fontSize: 16, fontWeight: 800, cursor: loading ? "wait" : "pointer", boxShadow: "0 10px 24px rgba(232,148,74,0.28)", opacity: loading ? 0.75 : 1 }}>
                     {loading ? "Envoi..." : "Recevoir le cahier"}
                   </button>
-                </div>
+                </form>
                 {chosenBook && <p style={{ marginTop: 14, color: "#8A7F76", fontSize: 14 }}>Cahier sélectionné : <strong style={{ color: "#403631" }}>{chosenBook.title}</strong></p>}
                 {error && <p style={{ marginTop: 12, color: "#C94F5D", fontSize: 14, fontWeight: 700 }}>{error}</p>}
               </>
