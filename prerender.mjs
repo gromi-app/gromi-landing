@@ -23,6 +23,12 @@ async function prerender() {
     const result = template.replace('<div id="root"></div>', `<div id="root">${html}</div>`)
 
     fs.writeFileSync(path.join(__dirname, 'dist/index.html'), result)
+    const bookRoutes = ['cirque', 'dinosaures', 'super-heros', 'pirates', 'espace', 'fonds-marins']
+    for (const route of bookRoutes) {
+      const routeDir = path.join(__dirname, 'dist/cahiers', route)
+      fs.mkdirSync(routeDir, { recursive: true })
+      fs.writeFileSync(path.join(routeDir, 'index.html'), result)
+    }
     console.log('✅ Prerendu généré avec succès')
   } catch (e) {
     console.warn('⚠️  Prérendu ignoré (mode interactif):', e.message)
