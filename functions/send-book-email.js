@@ -4,6 +4,7 @@ const ALLOWED_DOWNLOADS = new Set([
   "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-super-heros.pdf",
   "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-pirates.pdf",
   "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-fonds-marins.pdf",
+  "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-espace.pdf",
 ]);
 
 const SUPABASE_URL = "https://mfucdlmvhncetfozgqbp.supabase.co";
