@@ -17,17 +17,18 @@ async function prerender() {
     const { default: App } = await vite.ssrLoadModule('/src/App.jsx')
     const { createElement } = await import('react')
 
-    const html = renderToString(createElement(App))
-
     const template = fs.readFileSync(path.join(__dirname, 'dist/index.html'), 'utf-8')
-    const result = template.replace('<div id="root"></div>', `<div id="root">${html}</div>`)
+    const renderPage = (initialPath) => {
+      const html = renderToString(createElement(App, { initialPath }))
+      return template.replace('<div id="root"></div>', `<div id="root">${html}</div>`)
+    }
 
-    fs.writeFileSync(path.join(__dirname, 'dist/index.html'), result)
+    fs.writeFileSync(path.join(__dirname, 'dist/index.html'), renderPage('/'))
     const bookRoutes = ['cirque', 'dinosaures', 'super-heros', 'pirates', 'espace', 'fonds-marins']
     for (const route of bookRoutes) {
       const routeDir = path.join(__dirname, 'dist/cahiers', route)
       fs.mkdirSync(routeDir, { recursive: true })
-      fs.writeFileSync(path.join(routeDir, 'index.html'), result)
+      fs.writeFileSync(path.join(routeDir, 'index.html'), renderPage(`/cahiers/${route}/`))
     }
     console.log('✅ Prerendu généré avec succès')
   } catch (e) {

@@ -354,8 +354,8 @@ const EmailBox = ({ email, setEmail, ageRange, setAgeRange, submitted, loading, 
   );
 };
 
-export default function LandingPage() {
-  const path = typeof window !== "undefined" ? window.location.pathname : "/";
+export default function LandingPage({ initialPath = "/" }) {
+  const path = typeof window !== "undefined" ? window.location.pathname : initialPath;
   const [email, setEmail] = useState("");
   const [ageRange, setAgeRange] = useState("");
   const [submitted, setSubmitted] = useState(false);
