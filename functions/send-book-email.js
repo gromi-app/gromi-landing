@@ -1,6 +1,7 @@
 const ALLOWED_DOWNLOADS = new Set([
   "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-cirque.pdf",
   "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-dinosaures.pdf",
+  "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-super-heros.pdf",
 ]);
 
 function isValidEmail(email) {
