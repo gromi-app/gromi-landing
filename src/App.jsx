@@ -89,7 +89,7 @@ const BOOK_AGE_RANGES = ["Tous les âges", "3-6 ans", "6-8 ans", "8-10 ans"];
 const orange = "#E8944A";
 
 const ACTIVITY_BOOKS = [
-  { slug: "cirque", icon: "🎪", title: "Le cahier du cirque", subtitle: "Équilibre, jonglage et tracés", pitch: "Un cahier ludique pour bouger, viser, tracer et renforcer les bases du geste graphique.", ageRange: "3-6 ans", color: "#D96B7C", downloadUrl: "/cahiers/cahier-cirque.pdf" },
+  { slug: "cirque", icon: "🎪", title: "Le cahier du cirque", subtitle: "Équilibre, jonglage et tracés", pitch: "Un cahier ludique pour bouger, viser, tracer et renforcer les bases du geste graphique.", ageRange: "3-6 ans", color: "#D96B7C", downloadUrl: "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-cirque.pdf" },
   { slug: "dinosaures", icon: "🦕", title: "Le cahier des dinosaures", subtitle: "Découpage, graphisme et repérage", pitch: "Des activités autour des dinosaures pour travailler la précision, les repères et la motricité fine.", ageRange: "3-6 ans", color: "#61B276" },
   { slug: "super-heros", icon: "⚡", title: "Le cahier des super-héros", subtitle: "Coordination, attention et confiance", pitch: "Des défis progressifs pour entraîner l'attention, la coordination et l'envie d'oser.", ageRange: "6-8 ans", color: "#E8A23F" },
   { slug: "pirates", icon: "🏴‍☠️", title: "Le cahier des pirates", subtitle: "Orientation, logique et motricité fine", pitch: "Un univers d'aventure pour suivre des consignes, s'orienter et organiser ses gestes.", ageRange: "6-8 ans", color: "#5BA8B8" },
@@ -149,7 +149,7 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
         body: JSON.stringify({
           email: email.trim().toLowerCase(),
           bookTitle: chosenBook.title,
-          downloadUrl: new URL(chosenBook.downloadUrl, window.location.origin).toString(),
+          downloadUrl: chosenBook.downloadUrl,
         }),
       }).catch(() => {});
     }

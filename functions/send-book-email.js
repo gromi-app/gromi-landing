@@ -1,5 +1,5 @@
 const ALLOWED_DOWNLOADS = new Set([
-  "https://gromi.fr/cahiers/cahier-cirque.pdf",
+  "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-cirque.pdf",
 ]);
 
 function isValidEmail(email) {
@@ -18,8 +18,7 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ error: "Cahier invalide" }), { status: 400 });
     }
 
-    const url = new URL(downloadUrl);
-    const productionUrl = `https://gromi.fr${url.pathname}`;
+    const productionUrl = new URL(downloadUrl).toString();
 
     if (!ALLOWED_DOWNLOADS.has(productionUrl)) {
       return new Response(JSON.stringify({ error: "Lien non autorise" }), { status: 400 });
