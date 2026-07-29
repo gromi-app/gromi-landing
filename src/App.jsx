@@ -94,7 +94,7 @@ const ACTIVITY_BOOKS = [
   { slug: "super-heros", icon: "⚡", title: "Le cahier des super-héros", subtitle: "Coordination, attention et confiance", pitch: "Des défis progressifs pour entraîner l'attention, la coordination et l'envie d'oser.", ageRange: "6-8 ans", color: "#E8A23F", downloadUrl: "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-super-heros.pdf" },
   { slug: "pirates", icon: "🏴‍☠️", title: "Le cahier des pirates", subtitle: "Orientation, logique et motricité fine", pitch: "Un univers d'aventure pour suivre des consignes, s'orienter et organiser ses gestes.", ageRange: "6-8 ans", color: "#5BA8B8", downloadUrl: "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-pirates.pdf" },
   { slug: "espace", icon: "🚀", title: "Le cahier de l'espace", subtitle: "Planification, rythme et précision", pitch: "Des missions pour préparer la main, le regard et l'organisation nécessaires aux apprentissages.", ageRange: "8-10 ans", color: "#8975C9" },
-  { slug: "fonds-marins", icon: "🌊", title: "Le cahier des fonds marins", subtitle: "Repérage, mémoire et graphisme", pitch: "Des activités calmes et précises pour travailler le repérage, la mémoire et le graphisme.", ageRange: "8-10 ans", color: "#4E9FC9" },
+  { slug: "fonds-marins", icon: "🌊", title: "Le cahier des fonds marins", subtitle: "Repérage, mémoire et graphisme", pitch: "Des activités calmes et précises pour travailler le repérage, la mémoire et le graphisme.", ageRange: "8-10 ans", color: "#4E9FC9", downloadUrl: "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-fonds-marins.pdf" },
 ];
 
 const Section = ({ children, bg = "transparent", style: sx = {} }) => (
