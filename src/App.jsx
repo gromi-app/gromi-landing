@@ -85,13 +85,235 @@ const Carousel = ({ screens }) => {
 };
 
 const AGE_RANGES = ["0–1 an", "1–3 ans", "3–6 ans", "6–9 ans", "9–12 ans"];
+const BOOK_AGE_RANGES = ["Tous les âges", "3-6 ans", "6-8 ans", "8-10 ans"];
 const orange = "#E8944A";
+
+const ACTIVITY_BOOKS = [
+  { slug: "cirque", icon: "🎪", title: "Le cahier du cirque", subtitle: "Équilibre, jonglage et tracés", pitch: "Un cahier ludique pour bouger, viser, tracer et renforcer les bases du geste graphique.", ageRange: "3-6 ans", color: "#D96B7C", downloadUrl: "/cahiers/cahier-cirque.pdf" },
+  { slug: "dinosaures", icon: "🦕", title: "Le cahier des dinosaures", subtitle: "Découpage, graphisme et repérage", pitch: "Des activités autour des dinosaures pour travailler la précision, les repères et la motricité fine.", ageRange: "3-6 ans", color: "#61B276" },
+  { slug: "super-heros", icon: "⚡", title: "Le cahier des super-héros", subtitle: "Coordination, attention et confiance", pitch: "Des défis progressifs pour entraîner l'attention, la coordination et l'envie d'oser.", ageRange: "6-8 ans", color: "#E8A23F" },
+  { slug: "pirates", icon: "🏴‍☠️", title: "Le cahier des pirates", subtitle: "Orientation, logique et motricité fine", pitch: "Un univers d'aventure pour suivre des consignes, s'orienter et organiser ses gestes.", ageRange: "6-8 ans", color: "#5BA8B8" },
+  { slug: "espace", icon: "🚀", title: "Le cahier de l'espace", subtitle: "Planification, rythme et précision", pitch: "Des missions pour préparer la main, le regard et l'organisation nécessaires aux apprentissages.", ageRange: "8-10 ans", color: "#8975C9" },
+  { slug: "fonds-marins", icon: "🌊", title: "Le cahier des fonds marins", subtitle: "Repérage, mémoire et graphisme", pitch: "Des activités calmes et précises pour travailler le repérage, la mémoire et le graphisme.", ageRange: "8-10 ans", color: "#4E9FC9" },
+];
 
 const Section = ({ children, bg = "transparent", style: sx = {} }) => (
   <section style={{ padding: "56px 24px", background: bg, position: "relative", ...sx }}>{children}</section>
 );
 
 const Center = ({ children, max = 600 }) => <div style={{ maxWidth: max, margin: "0 auto" }}>{children}</div>;
+
+const StepTitle = ({ number, children }) => (
+  <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
+    <div style={{ width: 42, height: 42, borderRadius: 13, background: "#3F352F", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>{number}</div>
+    <h2 style={{ fontSize: "clamp(20px, 2.4vw, 27px)", lineHeight: 1.15, fontWeight: 800, color: "#3D3530" }}>{children}</h2>
+  </div>
+);
+
+const ActivityBooksPage = ({ initialBookSlug = null }) => {
+  const initialBook = ACTIVITY_BOOKS.find((book) => book.slug === initialBookSlug) ?? null;
+  const isBookLanding = Boolean(initialBook);
+  const shouldShowCatalog = !initialBookSlug;
+  const [selectedAge, setSelectedAge] = useState(initialBook?.ageRange ?? "Tous les âges");
+  const [selectedBook, setSelectedBook] = useState(initialBook);
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const visibleBooks = isBookLanding
+    ? [initialBook]
+    : ACTIVITY_BOOKS.filter((book) => selectedAge === "Tous les âges" || book.ageRange === selectedAge);
+  const chosenBook = selectedBook && visibleBooks.some((book) => book.slug === selectedBook.slug) ? selectedBook : null;
+
+  const submitBookRequest = async () => {
+    if (!chosenBook) { setError("Choisissez le cahier que vous voulez recevoir."); return; }
+    if (!email.includes("@")) { setError("Adresse email invalide."); return; }
+    setLoading(true);
+    setError("");
+    const { error: sbError } = await supabase.from("activity_book_waitlist").insert({
+      email: email.trim().toLowerCase(),
+      child_age_range: selectedAge,
+      book_slug: chosenBook.slug,
+      book_title: chosenBook.title,
+    });
+    setLoading(false);
+    if (sbError && sbError.code !== "23505") {
+      setError("Une erreur est survenue, réessayez.");
+      return;
+    }
+    if (chosenBook.downloadUrl) {
+      fetch("/send-book-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          bookTitle: chosenBook.title,
+          downloadUrl: new URL(chosenBook.downloadUrl, window.location.origin).toString(),
+        }),
+      }).catch(() => {});
+    }
+    setSubmitted(true);
+  };
+
+  return (
+    <div style={{ fontFamily: "'Quicksand', system-ui, sans-serif", color: "#3D3530", background: "#FDF8F2", minHeight: "100vh" }}>
+      <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+      <style>{`*{margin:0;padding:0;box-sizing:border-box}a{color:inherit;text-decoration:none}input:focus{outline:none;border-color:#E8944A!important}`}</style>
+
+      <div style={{ background: "#FDF8F2", padding: "24px 24px 8px" }}>
+        <div style={{ maxWidth: 980, margin: "0 auto" }}>
+          <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "#8A7F76", fontSize: 13, fontWeight: 700 }}>
+            ← Découvrir Gromi
+          </a>
+        </div>
+      </div>
+
+      <section style={{ padding: "30px 24px 54px", textAlign: "center", background: "#FDF8F2" }}>
+        <div style={{ maxWidth: 820, margin: "0 auto" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#F8D8C2", borderRadius: 999, padding: "10px 28px", marginBottom: 24 }}>
+            <span style={{ fontSize: 19 }}>👩‍⚕️</span>
+            <span style={{ fontWeight: 800, color: "#C65D2A", fontSize: "clamp(14px, 2vw, 20px)" }}>Créés par une psychomotricienne D.E.</span>
+          </div>
+          <h1 style={{ fontSize: "clamp(34px, 5vw, 52px)", lineHeight: 1.1, color: "#403631", fontWeight: 800 }}>
+            {isBookLanding ? <>Recevoir<br />{initialBook.title}</> : <>Des cahiers d'activités,<br />offerts.</>}
+          </h1>
+          <p style={{ fontSize: "clamp(17px, 2vw, 22px)", lineHeight: 1.6, color: "#958A83", maxWidth: 820, margin: "26px auto 0" }}>
+            {isBookLanding ? (
+              <>{initialBook.pitch} Ce cahier est <strong style={{ color: "#403631", fontWeight: 800 }}>gratuit</strong> : laissez votre email, je vous l'envoie.</>
+            ) : (
+              <>Le cirque, les dinosaures, les super-héros, les pirates, l'espace, les fonds marins... Ces cahiers étaient vendus en boutique. Aujourd'hui ils sont <strong style={{ color: "#403631", fontWeight: 800 }}>gratuits</strong> : choisissez celui qui correspond à votre enfant, je vous l'envoie par email.</>
+            )}
+          </p>
+        </div>
+      </section>
+
+      <main style={{ background: "#fff", padding: "44px 24px 58px" }}>
+        <div style={{ maxWidth: 980, margin: "0 auto" }}>
+          {shouldShowCatalog && (
+            <>
+              <StepTitle number="1">L'âge de votre enfant</StepTitle>
+              <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 50 }}>
+                {BOOK_AGE_RANGES.map((age) => {
+                  const active = selectedAge === age;
+                  return (
+                    <button key={age} onClick={() => { setSelectedAge(age); setSelectedBook(null); }} style={{
+                      border: active ? "2px solid #E8944A" : "3px solid #E9E2DB",
+                      background: active ? "#E8944A" : "#fff",
+                      color: active ? "#fff" : "#8A7F76",
+                      borderRadius: 28,
+                      padding: "15px 26px",
+                      minHeight: 62,
+                      fontFamily: "inherit",
+                      fontSize: "clamp(15px, 1.5vw, 20px)",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                      boxShadow: active ? "0 12px 28px rgba(232,148,74,0.22)" : "none",
+                    }}>{age}</button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
+          <StepTitle number={isBookLanding ? "1" : "2"}>{isBookLanding ? "Le cahier offert" : "Le cahier que vous voulez recevoir"}</StepTitle>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18, marginBottom: 50 }}>
+            {visibleBooks.map((book) => {
+              const active = chosenBook?.slug === book.slug;
+              return (
+                <button key={book.slug} onClick={() => setSelectedBook(book)} disabled={isBookLanding} style={{
+                  position: "relative",
+                  overflow: "hidden",
+                  textAlign: "left",
+                  minHeight: 176,
+                  border: active ? `3px solid ${book.color}` : "2px solid transparent",
+                  background: "#FFF9F2",
+                  borderRadius: 28,
+                  padding: "24px 28px 22px 46px",
+                  fontFamily: "inherit",
+                  cursor: isBookLanding ? "default" : "pointer",
+                  boxShadow: active ? "0 18px 34px rgba(120,90,60,0.16)" : "0 14px 34px rgba(120,90,60,0.08)",
+                }}>
+                  <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 22, background: book.color }} />
+                  <div style={{ fontSize: 23, marginBottom: 14 }}>{book.icon}</div>
+                  <h3 style={{ fontSize: "clamp(19px, 2vw, 24px)", lineHeight: 1.15, fontWeight: 800, color: "#403631", marginBottom: 9 }}>{book.title}</h3>
+                  <p style={{ color: "#958A83", fontSize: "clamp(15px, 1.45vw, 18px)", lineHeight: 1.35, marginBottom: 16 }}>{book.subtitle}</p>
+                  <strong style={{ color: book.color, fontSize: "clamp(15px, 1.45vw, 18px)", fontWeight: 800 }}>{book.ageRange}</strong>
+                  {isBookLanding && <p style={{ color: "#7F746C", fontSize: 14, lineHeight: 1.5, marginTop: 14 }}>{book.pitch}</p>}
+                  {active && <div style={{ position: "absolute", right: 22, top: 22, width: 34, height: 34, borderRadius: "50%", background: book.color, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800 }}>✓</div>}
+                </button>
+              );
+            })}
+          </div>
+
+          <StepTitle number={isBookLanding ? "2" : "3"}>Votre email</StepTitle>
+          <div style={{ background: "#FDF8F2", borderRadius: 26, padding: "26px", boxShadow: "0 16px 40px rgba(120,90,60,0.08)" }}>
+            {submitted ? (
+              <div style={{ textAlign: "center", padding: "18px" }}>
+                <div style={{ fontSize: 38, marginBottom: 12 }}>✅</div>
+                <h2 style={{ fontSize: 27, fontWeight: 800, marginBottom: 8 }}>C'est noté !</h2>
+                <p style={{ fontSize: 17, lineHeight: 1.6, color: "#7F746C" }}>Votre demande est enregistrée. Je vous enverrai le cahier par email.</p>
+              </div>
+            ) : (
+              <>
+                <p style={{ fontSize: 16, color: "#7F746C", lineHeight: 1.6, marginBottom: 18 }}>
+                  {isBookLanding ? `Ajoutez votre email pour recevoir ${chosenBook?.title ?? "ce cahier"}.` : "Choisissez un cahier, ajoutez votre email, et je saurai exactement lequel vous envoyer."}
+                </p>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  <input type="email" placeholder="votre@email.com" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submitBookRequest()} style={{ flex: "1 1 260px", border: "2px solid #E9E2DB", borderRadius: 16, padding: "15px 18px", fontSize: 16, fontFamily: "inherit", fontWeight: 700, color: "#403631", background: "#fff" }} />
+                  <button onClick={submitBookRequest} disabled={loading} style={{ border: "none", borderRadius: 16, background: "#E8944A", color: "#fff", padding: "15px 24px", fontFamily: "inherit", fontSize: 16, fontWeight: 800, cursor: loading ? "wait" : "pointer", boxShadow: "0 10px 24px rgba(232,148,74,0.28)", opacity: loading ? 0.75 : 1 }}>
+                    {loading ? "Envoi..." : "Recevoir le cahier"}
+                  </button>
+                </div>
+                {chosenBook && <p style={{ marginTop: 14, color: "#8A7F76", fontSize: 14 }}>Cahier sélectionné : <strong style={{ color: "#403631" }}>{chosenBook.title}</strong></p>}
+                {error && <p style={{ marginTop: 12, color: "#C94F5D", fontSize: 14, fontWeight: 700 }}>{error}</p>}
+              </>
+            )}
+          </div>
+        </div>
+      </main>
+
+      <section style={{ padding: "54px 24px 74px", textAlign: "center", background: "#fff" }}>
+        <div style={{ maxWidth: 940, margin: "0 auto" }}>
+          <h2 style={{ fontSize: "clamp(31px, 4vw, 43px)", lineHeight: 1.18, color: "#403631", fontWeight: 800, marginBottom: 24 }}>
+            Le problème des cahiers,<br />c'est qu'ils s'arrêtent.
+          </h2>
+          <p style={{ fontSize: "clamp(17px, 2vw, 23px)", lineHeight: 1.6, color: "#958A83", maxWidth: 860, margin: "0 auto 40px" }}>
+            Votre enfant, lui, continue de grandir. <strong style={{ color: "#403631", fontWeight: 800 }}>Gromi</strong> est l'app que je construis pour prendre le relais : un bilan psychomoteur, puis une activité adaptée chaque jour, de la naissance à 12 ans.
+          </p>
+
+          {[
+            { color: "#5B95D6", title: "Un bilan des acquisitions de votre enfant", text: "Vous situez précisément votre enfant sur les 5 domaines du développement." },
+            { color: "#61B276", title: "Une activité par jour, 10-15 min", text: "Avec le matériel de la maison, choisie pour SON âge et SES besoins." },
+            { color: "#8067C8", title: "Des progrès que vous voyez", text: "On réévalue régulièrement : les acquis se débloquent sous vos yeux." },
+          ].map((item) => (
+            <div key={item.title} style={{ background: "#FDF8F2", borderRadius: 24, padding: "24px 28px", marginBottom: 16, display: "flex", gap: 22, textAlign: "left", alignItems: "center" }}>
+              <div style={{ width: 14, height: 74, borderRadius: 999, background: item.color, flexShrink: 0 }} />
+              <div>
+                <h3 style={{ fontSize: "clamp(18px, 2vw, 24px)", lineHeight: 1.25, fontWeight: 800, color: "#403631", marginBottom: 8 }}>{item.title}</h3>
+                <p style={{ fontSize: "clamp(15px, 1.6vw, 19px)", lineHeight: 1.45, color: "#958A83" }}>{item.text}</p>
+              </div>
+            </div>
+          ))}
+
+          <a href="/" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", borderRadius: 18, padding: "15px 24px", background: "#E8944A", color: "#fff", fontSize: 16, fontWeight: 800, boxShadow: "0 10px 24px rgba(232,148,74,0.24)", marginTop: 30 }}>
+            Découvrir Gromi, l'application
+          </a>
+          <p style={{ fontSize: "clamp(16px, 1.8vw, 20px)", lineHeight: 1.55, color: "#958A83", fontStyle: "italic", marginTop: 22 }}>
+            Votre psychomotricienne de poche, pour accompagner le développement de votre enfant jour après jour.
+          </p>
+        </div>
+      </section>
+
+      <footer style={{ background: "#3D3530", color: "#A09A92", padding: "42px 24px", textAlign: "center" }}>
+        <div style={{ maxWidth: 500, margin: "0 auto" }}>
+          <div style={{ fontSize: 34, fontWeight: 800, color: "#F5EDE2", marginBottom: 12 }}>Gromi</div>
+          <div style={{ fontSize: 18 }}>L'app créée par Club Ludique</div>
+        </div>
+      </footer>
+    </div>
+  );
+};
 
 const EmailBox = ({ email, setEmail, ageRange, setAgeRange, submitted, loading, error, onSubmit }) => {
   if (submitted) return (
@@ -133,6 +355,7 @@ const EmailBox = ({ email, setEmail, ageRange, setAgeRange, submitted, loading, 
 };
 
 export default function LandingPage() {
+  const path = typeof window !== "undefined" ? window.location.pathname : "/";
   const [email, setEmail] = useState("");
   const [ageRange, setAgeRange] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -158,6 +381,16 @@ export default function LandingPage() {
 
   const boxProps = { email, setEmail, ageRange, setAgeRange, submitted, loading, error, onSubmit: handleSubmit };
 
+  const bookPathMatch = path.match(/^\/cahiers\/([^/]+)\/?$/);
+  if (bookPathMatch) {
+    return <ActivityBooksPage initialBookSlug={bookPathMatch[1]} />;
+  }
+  if (path === "/cahiers" || path === "/cahiers/") {
+    if (typeof window !== "undefined") {
+      window.location.replace("/");
+    }
+    return null;
+  }
 
   return (
     <div style={{ fontFamily: "'Quicksand', system-ui, sans-serif", color: "#3D3530", background: "#FFFFFF", minHeight: "100vh" }}>
@@ -182,6 +415,9 @@ export default function LandingPage() {
           <div className="fu4" style={{ marginTop: 28, position: "relative" }}>
             <EmailBox {...boxProps} />
             <p style={{ fontSize: 12, color: "#C4BAB0", marginTop: 10 }}>Gratuit. Pas de spam. Juste un email le jour du lancement.</p>
+            <a href="/cahiers" style={{ display: "inline-flex", marginTop: 18, alignItems: "center", justifyContent: "center", borderRadius: 16, padding: "13px 18px", background: "#FFF0E5", color: "#C65D2A", fontSize: 14, fontWeight: 800, boxShadow: "0 4px 16px rgba(180,120,70,0.12)" }}>
+              Recevoir un cahier d'activités gratuit
+            </a>
           </div>
         </Center>
       </Section>

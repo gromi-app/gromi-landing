@@ -1,0 +1,83 @@
+const ALLOWED_DOWNLOADS = new Set([
+  "https://gromi.fr/cahiers/cahier-cirque.pdf",
+]);
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+export async function onRequestPost(context) {
+  try {
+    const { email, bookTitle, downloadUrl } = await context.request.json();
+
+    if (!email || !isValidEmail(email)) {
+      return new Response(JSON.stringify({ error: "Email invalide" }), { status: 400 });
+    }
+
+    if (!bookTitle || !downloadUrl) {
+      return new Response(JSON.stringify({ error: "Cahier invalide" }), { status: 400 });
+    }
+
+    const url = new URL(downloadUrl);
+    const productionUrl = `https://gromi.fr${url.pathname}`;
+
+    if (!ALLOWED_DOWNLOADS.has(productionUrl)) {
+      return new Response(JSON.stringify({ error: "Lien non autorise" }), { status: 400 });
+    }
+
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${context.env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "Louise - Gromi <bonjour@gromi.fr>",
+        to: [email],
+        subject: `Votre cahier offert : ${bookTitle}`,
+        html: `
+          <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 540px; margin: 0 auto; background: #FDF8F2; border-radius: 22px; overflow: hidden;">
+            <div style="background: #E8944A; padding: 34px 32px; text-align: center;">
+              <h1 style="color: white; font-size: 27px; line-height: 34px; margin: 0; font-weight: 800;">Votre cahier est prêt</h1>
+            </div>
+            <div style="padding: 34px 32px;">
+              <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">Bonjour,</p>
+              <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">
+                Merci pour votre demande. Voici votre cahier offert :
+                <strong>${bookTitle}</strong>.
+              </p>
+              <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">
+                Vous pouvez le télécharger avec le bouton ci-dessous, puis l'imprimer ou le garder sur votre ordinateur.
+              </p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${productionUrl}" style="display: inline-block; background: #E8944A; color: #ffffff; text-decoration: none; border-radius: 16px; padding: 15px 24px; font-size: 16px; font-weight: 800;">
+                  Télécharger le cahier
+                </a>
+              </div>
+              <p style="font-size: 15px; color: #7F746C; line-height: 1.7;">
+                Et si vous voulez aller plus loin, je construis aussi Gromi : une application pour accompagner le développement psychomoteur de votre enfant avec un bilan puis des activités adaptées.
+              </p>
+              <p style="font-size: 16px; color: #3D3530; line-height: 1.7; margin-top: 24px;">
+                À très bientôt,<br/>
+                <strong>Louise</strong><br/>
+                <span style="color: #8A7F76; font-size: 14px;">Psychomotricienne D.E. &amp; créatrice de Gromi</span>
+              </p>
+            </div>
+            <div style="background: #FFF5F5; padding: 20px 32px; text-align: center;">
+              <p style="font-size: 13px; color: #C4BAB0; margin: 0;">Vous recevez cet email car vous avez demandé un cahier gratuit sur <a href="https://gromi.fr" style="color: #D4845A;">gromi.fr</a></p>
+            </div>
+          </div>
+        `,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      return new Response(JSON.stringify({ error: err }), { status: 500 });
+    }
+
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
+  } catch (e) {
+    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+  }
+}
