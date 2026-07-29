@@ -6,6 +6,9 @@ const ALLOWED_DOWNLOADS = new Set([
   "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-fonds-marins.pdf",
 ]);
 
+const SUPABASE_URL = "https://mfucdlmvhncetfozgqbp.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6Im1mdWNkbG12aG5jZXRmb3pncWJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTIxNTEsImV4cCI6MjA5MDQ2ODE1MX0.lkslG9vMQ17Wh5231UdZh_7iHSuWDk6KQTzKEzKlw6U";
+
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -17,7 +20,7 @@ export async function onRequestPost(context) {
     const payload = isForm
       ? Object.fromEntries(await context.request.formData())
       : await context.request.json();
-    const { email, bookTitle, downloadUrl } = payload;
+    const { email, bookTitle, downloadUrl, bookSlug, childAgeRange } = payload;
 
     if (!email || !isValidEmail(email)) {
       return new Response(JSON.stringify({ error: "Email invalide" }), { status: 400 });
@@ -32,6 +35,22 @@ export async function onRequestPost(context) {
     if (!ALLOWED_DOWNLOADS.has(productionUrl)) {
       return new Response(JSON.stringify({ error: "Lien non autorise" }), { status: 400 });
     }
+
+    await fetch(`${SUPABASE_URL}/rest/v1/activity_book_waitlist`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        "Prefer": "return=minimal",
+      },
+      body: JSON.stringify({
+        email: email.trim().toLowerCase(),
+        child_age_range: childAgeRange || "Non precise",
+        book_slug: bookSlug || "unknown",
+        book_title: bookTitle,
+      }),
+    }).catch(() => {});
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
