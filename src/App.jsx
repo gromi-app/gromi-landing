@@ -1,12 +1,12 @@
 import { useState, useRef } from "react";
 import { supabase } from "./supabase.js";
 
-const GROMI_IMG = "data:image/png;base64,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";
+const GROMI_IMG = "/gromi-logo.jpg";
 
 const Gromi = ({ size = 120 }) => (
   <div style={{ width: size, height: size, display: "inline-block", animation: "gromiFloat 3s ease-in-out infinite" }}>
     <style>{`@keyframes gromiFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}`}</style>
-    <img src={GROMI_IMG} alt="Gromi" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+    <img src={GROMI_IMG} alt="Gromi" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "24%", display: "block" }} />
   </div>
 );
 
@@ -48,7 +48,7 @@ const Carousel = ({ screens }) => {
               background: disabled ? "transparent" : "#fff",
               boxShadow: disabled ? "none" : "0 2px 8px rgba(0,0,0,0.12)",
               cursor: disabled ? "default" : "pointer",
-              color: disabled ? "#D4C8C0" : "#3D3530",
+              color: disabled ? "#D4C8C0" : "#463B33",
               fontSize: 15, fontWeight: 700, zIndex: 3,
             }}>{arrow}</button>
           );
@@ -76,7 +76,7 @@ const Carousel = ({ screens }) => {
         {screens.map((_, i) => (
           <button key={i} onClick={() => goTo(i)} style={{
             width: i === current ? 22 : 7, height: 7, borderRadius: 4, border: "none", padding: 0, cursor: "pointer",
-            background: i === current ? "#D4845A" : "#EDE6DE", transition: "all 0.3s",
+            background: i === current ? "#D9612F" : "#E2D3BF", transition: "all 0.3s",
           }} />
         ))}
       </div>
@@ -86,7 +86,7 @@ const Carousel = ({ screens }) => {
 
 const AGE_RANGES = ["0–1 an", "1–3 ans", "3–6 ans", "6–9 ans", "9–12 ans"];
 const BOOK_AGE_RANGES = ["Tous les âges", "3-6 ans", "6-8 ans", "8-10 ans"];
-const orange = "#E8944A";
+const orange = "#FF8A5B";
 
 const ACTIVITY_BOOKS = [
   { slug: "cirque", icon: "🎪", title: "Le cahier du cirque", subtitle: "Équilibre, jonglage et tracés", pitch: "Un cahier ludique pour bouger, viser, tracer et renforcer les bases du geste graphique.", ageRange: "3-6 ans", color: "#D96B7C", downloadUrl: "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-cirque.pdf" },
@@ -97,16 +97,16 @@ const ACTIVITY_BOOKS = [
   { slug: "fonds-marins", icon: "🌊", title: "Le cahier des fonds marins", subtitle: "Repérage, mémoire et graphisme", pitch: "Des activités calmes et précises pour travailler le repérage, la mémoire et le graphisme.", ageRange: "8-10 ans", color: "#4E9FC9", downloadUrl: "https://mfucdlmvhncetfozgqbp.supabase.co/storage/v1/object/public/activity-books/cahier-fonds-marins.pdf" },
 ];
 
-const Section = ({ children, bg = "transparent", style: sx = {} }) => (
-  <section style={{ padding: "56px 24px", background: bg, position: "relative", ...sx }}>{children}</section>
+const Section = ({ children, bg = "transparent", className, style: sx = {} }) => (
+  <section className={className} style={{ padding: "56px 24px", background: bg, position: "relative", ...sx }}>{children}</section>
 );
 
 const Center = ({ children, max = 600 }) => <div style={{ maxWidth: max, margin: "0 auto" }}>{children}</div>;
 
 const StepTitle = ({ number, children }) => (
   <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
-    <div style={{ width: 42, height: 42, borderRadius: 13, background: "#3F352F", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>{number}</div>
-    <h2 style={{ fontSize: "clamp(20px, 2.4vw, 27px)", lineHeight: 1.15, fontWeight: 800, color: "#3D3530" }}>{children}</h2>
+    <div style={{ width: 42, height: 42, borderRadius: 13, background: "#214E78", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>{number}</div>
+    <h2 style={{ fontSize: "clamp(20px, 2.4vw, 27px)", lineHeight: 1.15, fontWeight: 800, color: "#463B33" }}>{children}</h2>
   </div>
 );
 
@@ -157,32 +157,32 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
   };
 
   return (
-    <div style={{ fontFamily: "'Quicksand', system-ui, sans-serif", color: "#3D3530", background: "#FDF8F2", minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'Quicksand', system-ui, sans-serif", color: "#463B33", background: "#FFFAF6", minHeight: "100vh" }}>
       <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-      <style>{`*{margin:0;padding:0;box-sizing:border-box}a{color:inherit;text-decoration:none}input:focus{outline:none;border-color:#E8944A!important}`}</style>
+      <style>{`*{margin:0;padding:0;box-sizing:border-box}a{color:inherit;text-decoration:none}input:focus{outline:none;border-color:#FF8A5B!important}`}</style>
 
-      <div style={{ background: "#FDF8F2", padding: "24px 24px 8px" }}>
+      <div style={{ background: "#FFFAF6", padding: "24px 24px 8px" }}>
         <div style={{ maxWidth: 980, margin: "0 auto" }}>
-          <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "#8A7F76", fontSize: 13, fontWeight: 700 }}>
+          <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "#7E7064", fontSize: 13, fontWeight: 700 }}>
             ← Découvrir Gromi
           </a>
         </div>
       </div>
 
-      <section style={{ padding: "30px 24px 54px", textAlign: "center", background: "#FDF8F2" }}>
+      <section style={{ padding: "30px 24px 54px", textAlign: "center", background: "#FFFAF6" }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#F8D8C2", borderRadius: 999, padding: "10px 28px", marginBottom: 24 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#FFE7DA", borderRadius: 999, padding: "10px 28px", marginBottom: 24 }}>
             <span style={{ fontSize: 19 }}>👩‍⚕️</span>
-            <span style={{ fontWeight: 800, color: "#C65D2A", fontSize: "clamp(14px, 2vw, 20px)" }}>Créés par une psychomotricienne D.E.</span>
+            <span style={{ fontWeight: 800, color: "#D9612F", fontSize: "clamp(14px, 2vw, 20px)" }}>Créés par une psychomotricienne D.E.</span>
           </div>
-          <h1 style={{ fontSize: "clamp(34px, 5vw, 52px)", lineHeight: 1.1, color: "#403631", fontWeight: 800 }}>
+          <h1 style={{ fontSize: "clamp(34px, 5vw, 52px)", lineHeight: 1.1, color: "#463B33", fontWeight: 800 }}>
             {isBookLanding ? <>Recevoir<br />{initialBook.title}</> : <>Des cahiers d'activités,<br />offerts.</>}
           </h1>
-          <p style={{ fontSize: "clamp(17px, 2vw, 22px)", lineHeight: 1.6, color: "#958A83", maxWidth: 820, margin: "26px auto 0" }}>
+          <p style={{ fontSize: "clamp(17px, 2vw, 22px)", lineHeight: 1.6, color: "#7E7064", maxWidth: 820, margin: "26px auto 0" }}>
             {isBookLanding ? (
-              <>{initialBook.pitch} Ce cahier est <strong style={{ color: "#403631", fontWeight: 800 }}>gratuit</strong> : laissez votre email, je vous l'envoie.</>
+              <>{initialBook.pitch} Ce cahier est <strong style={{ color: "#463B33", fontWeight: 800 }}>gratuit</strong> : laissez votre email, je vous l'envoie.</>
             ) : (
-              <>Le cirque, les dinosaures, les super-héros, les pirates, l'espace, les fonds marins... Ces cahiers étaient vendus en boutique. Aujourd'hui ils sont <strong style={{ color: "#403631", fontWeight: 800 }}>gratuits</strong> : choisissez celui qui correspond à votre enfant, je vous l'envoie par email.</>
+              <>Le cirque, les dinosaures, les super-héros, les pirates, l'espace, les fonds marins... Ces cahiers étaient vendus en boutique. Aujourd'hui ils sont <strong style={{ color: "#463B33", fontWeight: 800 }}>gratuits</strong> : choisissez celui qui correspond à votre enfant, je vous l'envoie par email.</>
             )}
           </p>
         </div>
@@ -198,9 +198,9 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
                   const active = selectedAge === age;
                   return (
                     <button key={age} onClick={() => { setSelectedAge(age); setSelectedBook(null); }} style={{
-                      border: active ? "2px solid #E8944A" : "3px solid #E9E2DB",
-                      background: active ? "#E8944A" : "#fff",
-                      color: active ? "#fff" : "#8A7F76",
+                      border: active ? "2px solid #FF8A5B" : "3px solid #F1D7BE",
+                      background: active ? "#FF8A5B" : "#fff",
+                      color: active ? "#214E78" : "#7E7064",
                       borderRadius: 28,
                       padding: "15px 26px",
                       minHeight: 62,
@@ -208,7 +208,7 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
                       fontSize: "clamp(15px, 1.5vw, 20px)",
                       fontWeight: 800,
                       cursor: "pointer",
-                      boxShadow: active ? "0 12px 28px rgba(232,148,74,0.22)" : "none",
+                      boxShadow: active ? "0 12px 28px rgba(255,138,91,0.22)" : "none",
                     }}>{age}</button>
                   );
                 })}
@@ -227,7 +227,7 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
                   textAlign: "left",
                   minHeight: 176,
                   border: active ? `3px solid ${book.color}` : "2px solid transparent",
-                  background: "#FFF9F2",
+                  background: "#FFFAF6",
                   borderRadius: 28,
                   padding: "24px 28px 22px 46px",
                   fontFamily: "inherit",
@@ -236,10 +236,10 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
                 }}>
                   <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 22, background: book.color }} />
                   <div style={{ fontSize: 23, marginBottom: 14 }}>{book.icon}</div>
-                  <h3 style={{ fontSize: "clamp(19px, 2vw, 24px)", lineHeight: 1.15, fontWeight: 800, color: "#403631", marginBottom: 9 }}>{book.title}</h3>
-                  <p style={{ color: "#958A83", fontSize: "clamp(15px, 1.45vw, 18px)", lineHeight: 1.35, marginBottom: 16 }}>{book.subtitle}</p>
+                  <h3 style={{ fontSize: "clamp(19px, 2vw, 24px)", lineHeight: 1.15, fontWeight: 800, color: "#463B33", marginBottom: 9 }}>{book.title}</h3>
+                  <p style={{ color: "#7E7064", fontSize: "clamp(15px, 1.45vw, 18px)", lineHeight: 1.35, marginBottom: 16 }}>{book.subtitle}</p>
                   <strong style={{ color: book.color, fontSize: "clamp(15px, 1.45vw, 18px)", fontWeight: 800 }}>{book.ageRange}</strong>
-                  {isBookLanding && <p style={{ color: "#7F746C", fontSize: 14, lineHeight: 1.5, marginTop: 14 }}>{book.pitch}</p>}
+                  {isBookLanding && <p style={{ color: "#7E7064", fontSize: 14, lineHeight: 1.5, marginTop: 14 }}>{book.pitch}</p>}
                   {active && <div style={{ position: "absolute", right: 22, top: 22, width: 34, height: 34, borderRadius: "50%", background: book.color, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800 }}>✓</div>}
                 </button>
               );
@@ -247,16 +247,16 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
           </div>
 
           <StepTitle number={isBookLanding ? "2" : "3"}>Votre email</StepTitle>
-          <div style={{ background: "#FDF8F2", borderRadius: 26, padding: "26px", boxShadow: "0 16px 40px rgba(120,90,60,0.08)" }}>
+          <div style={{ background: "#FFFAF6", borderRadius: 26, padding: "26px", boxShadow: "0 16px 40px rgba(120,90,60,0.08)" }}>
             {submitted ? (
               <div style={{ textAlign: "center", padding: "18px" }}>
                 <div style={{ fontSize: 38, marginBottom: 12 }}>✅</div>
                 <h2 style={{ fontSize: 27, fontWeight: 800, marginBottom: 8 }}>C'est noté !</h2>
-                <p style={{ fontSize: 17, lineHeight: 1.6, color: "#7F746C" }}>Votre demande est enregistrée. Je vous enverrai le cahier par email.</p>
+                <p style={{ fontSize: 17, lineHeight: 1.6, color: "#7E7064" }}>Votre demande est enregistrée. Je vous enverrai le cahier par email.</p>
               </div>
             ) : (
               <>
-                <p style={{ fontSize: 16, color: "#7F746C", lineHeight: 1.6, marginBottom: 18 }}>
+                <p style={{ fontSize: 16, color: "#7E7064", lineHeight: 1.6, marginBottom: 18 }}>
                   {isBookLanding ? `Ajoutez votre email pour recevoir ${chosenBook?.title ?? "ce cahier"}.` : "Choisissez un cahier, ajoutez votre email, et je saurai exactement lequel vous envoyer."}
                 </p>
                 <form action="/send-book-email" method="POST" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -264,12 +264,12 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
                   <input type="hidden" name="bookSlug" value={chosenBook?.slug ?? ""} />
                   <input type="hidden" name="childAgeRange" value={selectedAge} />
                   <input type="hidden" name="downloadUrl" value={chosenBook?.downloadUrl ?? ""} />
-                  <input type="email" name="email" required placeholder="votre@email.com" defaultValue={email} onChange={(e) => setEmail(e.target.value)} style={{ flex: "1 1 260px", border: "2px solid #E9E2DB", borderRadius: 16, padding: "15px 18px", fontSize: 16, fontFamily: "inherit", fontWeight: 700, color: "#403631", background: "#fff" }} />
-                  <button type="submit" style={{ border: "none", borderRadius: 16, background: "#E8944A", color: "#fff", padding: "15px 24px", fontFamily: "inherit", fontSize: 16, fontWeight: 800, cursor: "pointer", boxShadow: "0 10px 24px rgba(232,148,74,0.28)", opacity: 1 }}>
+                  <input type="email" name="email" required placeholder="votre@email.com" defaultValue={email} onChange={(e) => setEmail(e.target.value)} style={{ flex: "1 1 260px", border: "2px solid #F1D7BE", borderRadius: 16, padding: "15px 18px", fontSize: 16, fontFamily: "inherit", fontWeight: 700, color: "#463B33", background: "#fff" }} />
+                  <button type="submit" style={{ border: "none", borderRadius: 16, background: "#FF8A5B", color: "#214E78", padding: "15px 24px", fontFamily: "inherit", fontSize: 16, fontWeight: 800, cursor: "pointer", boxShadow: "0 10px 24px rgba(255,138,91,0.28)", opacity: 1 }}>
                     Recevoir le cahier
                   </button>
                 </form>
-                {chosenBook && <p style={{ marginTop: 14, color: "#8A7F76", fontSize: 14 }}>Cahier sélectionné : <strong style={{ color: "#403631" }}>{chosenBook.title}</strong></p>}
+                {chosenBook && <p style={{ marginTop: 14, color: "#7E7064", fontSize: 14 }}>Cahier sélectionné : <strong style={{ color: "#463B33" }}>{chosenBook.title}</strong></p>}
                 {error && <p style={{ marginTop: 12, color: "#C94F5D", fontSize: 14, fontWeight: 700 }}>{error}</p>}
               </>
             )}
@@ -279,11 +279,11 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
 
       <section style={{ padding: "54px 24px 74px", textAlign: "center", background: "#fff" }}>
         <div style={{ maxWidth: 940, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "clamp(31px, 4vw, 43px)", lineHeight: 1.18, color: "#403631", fontWeight: 800, marginBottom: 24 }}>
+          <h2 style={{ fontSize: "clamp(31px, 4vw, 43px)", lineHeight: 1.18, color: "#463B33", fontWeight: 800, marginBottom: 24 }}>
             Le problème des cahiers,<br />c'est qu'ils s'arrêtent.
           </h2>
-          <p style={{ fontSize: "clamp(17px, 2vw, 23px)", lineHeight: 1.6, color: "#958A83", maxWidth: 860, margin: "0 auto 40px" }}>
-            Votre enfant, lui, continue de grandir. <strong style={{ color: "#403631", fontWeight: 800 }}>Gromi</strong> est l'app que je construis pour prendre le relais : un bilan psychomoteur, puis une activité adaptée chaque jour, de la naissance à 12 ans.
+          <p style={{ fontSize: "clamp(17px, 2vw, 23px)", lineHeight: 1.6, color: "#7E7064", maxWidth: 860, margin: "0 auto 40px" }}>
+            Votre enfant, lui, continue de grandir. <strong style={{ color: "#463B33", fontWeight: 800 }}>Gromi</strong> est l'app que je construis pour prendre le relais : un bilan psychomoteur, puis une activité adaptée chaque jour, de la naissance à 12 ans.
           </p>
 
           {[
@@ -291,25 +291,25 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
             { color: "#61B276", title: "Une activité par jour, 10-15 min", text: "Avec le matériel de la maison, choisie pour SON âge et SES besoins." },
             { color: "#8067C8", title: "Des progrès que vous voyez", text: "On réévalue régulièrement : les acquis se débloquent sous vos yeux." },
           ].map((item) => (
-            <div key={item.title} style={{ background: "#FDF8F2", borderRadius: 24, padding: "24px 28px", marginBottom: 16, display: "flex", gap: 22, textAlign: "left", alignItems: "center" }}>
+            <div key={item.title} style={{ background: "#FFFAF6", borderRadius: 24, padding: "24px 28px", marginBottom: 16, display: "flex", gap: 22, textAlign: "left", alignItems: "center" }}>
               <div style={{ width: 14, height: 74, borderRadius: 999, background: item.color, flexShrink: 0 }} />
               <div>
-                <h3 style={{ fontSize: "clamp(18px, 2vw, 24px)", lineHeight: 1.25, fontWeight: 800, color: "#403631", marginBottom: 8 }}>{item.title}</h3>
-                <p style={{ fontSize: "clamp(15px, 1.6vw, 19px)", lineHeight: 1.45, color: "#958A83" }}>{item.text}</p>
+                <h3 style={{ fontSize: "clamp(18px, 2vw, 24px)", lineHeight: 1.25, fontWeight: 800, color: "#463B33", marginBottom: 8 }}>{item.title}</h3>
+                <p style={{ fontSize: "clamp(15px, 1.6vw, 19px)", lineHeight: 1.45, color: "#7E7064" }}>{item.text}</p>
               </div>
             </div>
           ))}
 
-          <a href="/" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", borderRadius: 18, padding: "15px 24px", background: "#E8944A", color: "#fff", fontSize: 16, fontWeight: 800, boxShadow: "0 10px 24px rgba(232,148,74,0.24)", marginTop: 30 }}>
+          <a href="/" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", borderRadius: 18, padding: "15px 24px", background: "#FF8A5B", color: "#214E78", fontSize: 16, fontWeight: 800, boxShadow: "0 10px 24px rgba(255,138,91,0.24)", marginTop: 30 }}>
             Découvrir Gromi, l'application
           </a>
-          <p style={{ fontSize: "clamp(16px, 1.8vw, 20px)", lineHeight: 1.55, color: "#958A83", fontStyle: "italic", marginTop: 22 }}>
+          <p style={{ fontSize: "clamp(16px, 1.8vw, 20px)", lineHeight: 1.55, color: "#7E7064", fontStyle: "italic", marginTop: 22 }}>
             Votre psychomotricienne de poche, pour accompagner le développement de votre enfant jour après jour.
           </p>
         </div>
       </section>
 
-      <footer style={{ background: "#3D3530", color: "#A09A92", padding: "42px 24px", textAlign: "center" }}>
+      <footer style={{ background: "#214E78", color: "#DDEAFB", padding: "42px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 500, margin: "0 auto" }}>
           <div style={{ fontSize: 34, fontWeight: 800, color: "#F5EDE2", marginBottom: 12 }}>Gromi</div>
           <div style={{ fontSize: 18 }}>L'app créée par Club Ludique</div>
@@ -321,25 +321,25 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
 
 const EmailBox = ({ email, setEmail, ageRange, setAgeRange, submitted, loading, error, onSubmit }) => {
   if (submitted) return (
-    <div style={{ background: "#E5F2E5", borderRadius: 20, padding: "18px 24px", maxWidth: 400, margin: "0 auto", display: "flex", alignItems: "center", gap: 10 }}>
+    <div style={{ background: "#D6EFDF", borderRadius: 20, padding: "18px 24px", maxWidth: 400, margin: "0 auto", display: "flex", alignItems: "center", gap: 10 }}>
       <span style={{ fontSize: 24 }}>✅</span>
       <div style={{ textAlign: "left" }}>
         <div style={{ fontWeight: 800 }}>C'est noté !</div>
-        <div style={{ fontSize: 13, color: "#6BA87B" }}>On vous envoie un email dès que Gromi est dispo.</div>
+        <div style={{ fontSize: 13, color: "#2A7D52" }}>On vous envoie un email dès que Gromi est dispo.</div>
       </div>
     </div>
   );
   return (
-    <div style={{ maxWidth: 420, margin: "0 auto" }}>
-      <p style={{ fontSize: 13, fontWeight: 700, color: "#8A7F76", marginBottom: 10, textAlign: "center" }}>
+    <div className="email-box" style={{ maxWidth: 420, margin: "0 auto", background: "#FFFAF6", borderRadius: 24, padding: 20, color: "#463B33" }}>
+      <p style={{ fontSize: 13, fontWeight: 700, color: "#7E7064", marginBottom: 10, textAlign: "center" }}>
         Quel âge a votre enfant ?
       </p>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", marginBottom: 14 }}>
         {AGE_RANGES.map(a => (
           <button key={a} onClick={() => setAgeRange(a)} style={{
-            padding: "8px 14px", borderRadius: 20, border: `2px solid ${ageRange === a ? orange : "#EDE6DE"}`,
-            background: ageRange === a ? "#FFF0E0" : "#fff",
-            color: ageRange === a ? orange : "#8A7F76",
+            padding: "8px 14px", borderRadius: 20, border: `2px solid ${ageRange === a ? orange : "#E2D3BF"}`,
+            background: ageRange === a ? "#FFF0E5" : "#fff",
+            color: ageRange === a ? "#463B33" : "#7E7064",
             fontWeight: 700, fontSize: 13, fontFamily: "inherit", cursor: "pointer", transition: "all 0.2s",
           }}>{a}</button>
         ))}
@@ -347,9 +347,9 @@ const EmailBox = ({ email, setEmail, ageRange, setAgeRange, submitted, loading, 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
         <input type="email" placeholder="votre@email.com" value={email} onChange={e => setEmail(e.target.value)}
           onKeyDown={e => e.key === "Enter" && onSubmit()}
-          style={{ flex: "1 1 200px", padding: "14px 18px", borderRadius: 14, border: "2px solid #EDE6DE", fontSize: 14, fontFamily: "inherit", fontWeight: 600, color: "#3D3530", background: "#fff", minWidth: 180 }} />
+          style={{ flex: "1 1 200px", padding: "14px 18px", borderRadius: 14, border: "2px solid #E2D3BF", fontSize: 14, fontFamily: "inherit", fontWeight: 600, color: "#463B33", background: "#fff", minWidth: 180 }} />
         <button onClick={onSubmit} disabled={loading}
-          style={{ padding: "14px 22px", borderRadius: 14, border: "none", background: orange, color: "#fff", fontSize: 14, fontWeight: 800, fontFamily: "inherit", cursor: loading ? "wait" : "pointer", boxShadow: "0 4px 20px rgba(232,148,74,0.35)", whiteSpace: "nowrap", opacity: loading ? 0.7 : 1 }}>
+          style={{ padding: "14px 22px", borderRadius: 14, border: "none", background: orange, color: "#214E78", fontSize: 14, fontWeight: 800, fontFamily: "inherit", cursor: loading ? "wait" : "pointer", boxShadow: "0 4px 20px rgba(255,138,91,0.35)", whiteSpace: "nowrap", opacity: loading ? 0.7 : 1 }}>
           {loading ? "…" : "Je veux être prévenu 🚀"}
         </button>
       </div>
@@ -365,7 +365,7 @@ export default function LandingPage({ initialPath = "/" }) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const P = { rose: "#F2C4C4", bleu: "#B8D4E8", vert: "#B8D8B8", jaune: "#F0DCA0", peche: "#F5D8C4", lilas: "#D0C8E8" };
+  const P = { rose: "#FCDFE9", bleu: "#DDEAFB", vert: "#D4F1ED", jaune: "#F0DCA0", peche: "#FFE7DA", lilas: "#ECE1FA" };
 
   const handleSubmit = async () => {
     if (!email.includes("@")) { setError("Adresse email invalide."); return; }
@@ -397,7 +397,7 @@ export default function LandingPage({ initialPath = "/" }) {
   }
 
   return (
-    <div style={{ fontFamily: "'Quicksand', system-ui, sans-serif", color: "#3D3530", background: "#FFFFFF", minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'Quicksand', system-ui, sans-serif", color: "#463B33", background: "#FFFFFF", minHeight: "100vh" }}>
       <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       <style>{`*{margin:0;padding:0;box-sizing:border-box}a{color:inherit;text-decoration:none}input:focus{outline:none}
         @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
@@ -405,21 +405,21 @@ export default function LandingPage({ initialPath = "/" }) {
       `}</style>
 
       {/* ============ HERO — Émotionnel, la peur du parent ============ */}
-      <Section style={{ padding: "60px 24px 70px", textAlign: "center", overflow: "hidden" }}>
+      <Section className="brand-dark" bg="#214E78" style={{ padding: "60px 24px 70px", textAlign: "center", overflow: "hidden", color: "#FFFFFF" }}>
         <Blob size={200} color={P.rose} top={-60} left={-80} />
         <Blob size={150} color={P.bleu} top={30} right={-60} />
         <Center max={560}>
           <div className="fu1" style={{ position: "relative" }}><Gromi size={120} /></div>
           <h1 className="fu2" style={{ fontSize: "clamp(28px, 7vw, 44px)", fontWeight: 800, lineHeight: 1.15, marginTop: 16, position: "relative" }}>
-            « Est-ce que mon enfant<br />se développe <span style={{ color: "#D4845A" }}>bien</span> ? »
+            « Est-ce que mon enfant<br />se développe <span style={{ color: "#D9612F" }}>bien</span> ? »
           </h1>
-          <p className="fu3" style={{ fontSize: 17, color: "#8A7F76", marginTop: 14, lineHeight: 1.6, position: "relative" }}>
-            Vous vous posez cette question. Tous les parents se la posent. De la naissance jusqu'à 12 ans, <strong style={{ color: "#D4845A", fontWeight: 800 }}>Gromi</strong> vous donne la réponse — et les outils pour l'accompagner à chaque étape.
+          <p className="fu3" style={{ fontSize: 17, color: "#7E7064", marginTop: 14, lineHeight: 1.6, position: "relative" }}>
+            Vous vous posez cette question. Tous les parents se la posent. De la naissance jusqu'à 12 ans, <strong style={{ color: "#D9612F", fontWeight: 800 }}>Gromi</strong> vous donne la réponse — et les outils pour l'accompagner à chaque étape.
           </p>
           <div className="fu4" style={{ marginTop: 28, position: "relative" }}>
             <EmailBox {...boxProps} />
             <p style={{ fontSize: 12, color: "#C4BAB0", marginTop: 10 }}>Gratuit. Pas de spam. Juste un email le jour du lancement.</p>
-            <a href="/cahiers" style={{ display: "inline-flex", marginTop: 18, alignItems: "center", justifyContent: "center", borderRadius: 16, padding: "13px 18px", background: "#FFF0E5", color: "#C65D2A", fontSize: 14, fontWeight: 800, boxShadow: "0 4px 16px rgba(180,120,70,0.12)" }}>
+            <a href="/cahiers" style={{ display: "inline-flex", marginTop: 18, alignItems: "center", justifyContent: "center", borderRadius: 16, padding: "13px 18px", background: "#FFF0E5", color: "#D9612F", fontSize: 14, fontWeight: 800, boxShadow: "0 4px 16px rgba(180,120,70,0.12)" }}>
               Recevoir un cahier d'activités gratuit
             </a>
           </div>
@@ -432,7 +432,7 @@ export default function LandingPage({ initialPath = "/" }) {
           <h2 style={{ fontSize: "clamp(20px, 5vw, 28px)", fontWeight: 800, marginBottom: 8 }}>
             Louise vous explique tout en 1 minute
           </h2>
-          <p style={{ fontSize: 15, color: "#8A7F76", marginBottom: 28 }}>
+          <p style={{ fontSize: 15, color: "#7E7064", marginBottom: 28 }}>
             Psychomotricienne D.E. &amp; créatrice de Club Ludique
           </p>
           <div style={{
@@ -457,7 +457,7 @@ export default function LandingPage({ initialPath = "/" }) {
       </Section>
 
       {/* ============ STAT CHOC ============ */}
-      <div style={{ background: "#C4540A", padding: "48px 24px", textAlign: "center" }}>
+      <div style={{ background: "#214E78", padding: "48px 24px", textAlign: "center" }}>
         <Center max={580}>
           <div style={{ fontSize: "clamp(52px, 12vw, 80px)", fontWeight: 800, color: "#FFFFFF", lineHeight: 1, letterSpacing: "-2px" }}>
             100%
@@ -473,25 +473,25 @@ export default function LandingPage({ initialPath = "/" }) {
       </div>
 
       {/* ============ LES DOUTES ============ */}
-      <Section bg="#FFF5F5">
+      <Section bg="#FFF0E5">
         <Center>
           <h2 style={{ fontSize: 26, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>
             Vous reconnaissez-vous ?
           </h2>
           {[
-            { q: "« Les enfants de mes amies marchent déjà, pas le mien… »", a: <span>Chaque enfant a son rythme. Mais <strong style={{color:"#D4845A"}}>savoir OÙ il en est et QUOI faire</strong> pour l'accompagner, ça change tout.</span>, e: "😟" },
-            { q: "« Il ne tient pas en place, il n'arrive pas à se concentrer »", a: <span>Ce n'est peut-être pas un problème de comportement — c'est peut-être <strong style={{color:"#D4845A"}}>un besoin psychomoteur non comblé.</strong></span>, e: "🤯" },
-            { q: "« En CE2 son écriture est illisible, il déteste écrire »", a: <span>L'écriture c'est motricité fine + tonus + coordination. <strong style={{color:"#D4845A"}}>Des exercices ciblés peuvent tout débloquer.</strong></span>, e: "✏️" },
-            { q: "« Je ne sais pas si je stimule assez mon enfant »", a: <span>Pas besoin d'être experte. <strong style={{color:"#D4845A"}}>10 minutes par jour</strong> d'activité adaptée font une vraie différence, à tout âge.</span>, e: "😰" },
-            { q: "« En CM1 il est maladroit, il se cogne partout, il casse tout »", a: <span>La maladresse n'est pas un trait de caractère — <strong style={{color:"#D4845A"}}>c'est un schéma corporel et une coordination qui se travaillent.</strong></span>, e: "💥" },
-            { q: "« Le pédiatre dit que tout va bien mais j'ai un doute »", a: <span>Le pédiatre vérifie la santé. <strong style={{color:"#D4845A"}}>La psychomotricité, c'est le développement global.</strong> Ce n'est pas la même chose.</span>, e: "🤔" },
+            { q: "« Les enfants de mes amies marchent déjà, pas le mien… »", a: <span>Chaque enfant a son rythme. Mais <strong style={{color:"#D9612F"}}>savoir OÙ il en est et QUOI faire</strong> pour l'accompagner, ça change tout.</span>, e: "😟" },
+            { q: "« Il ne tient pas en place, il n'arrive pas à se concentrer »", a: <span>Ce n'est peut-être pas un problème de comportement — c'est peut-être <strong style={{color:"#D9612F"}}>un besoin psychomoteur non comblé.</strong></span>, e: "🤯" },
+            { q: "« En CE2 son écriture est illisible, il déteste écrire »", a: <span>L'écriture c'est motricité fine + tonus + coordination. <strong style={{color:"#D9612F"}}>Des exercices ciblés peuvent tout débloquer.</strong></span>, e: "✏️" },
+            { q: "« Je ne sais pas si je stimule assez mon enfant »", a: <span>Pas besoin d'être experte. <strong style={{color:"#D9612F"}}>10 minutes par jour</strong> d'activité adaptée font une vraie différence, à tout âge.</span>, e: "😰" },
+            { q: "« En CM1 il est maladroit, il se cogne partout, il casse tout »", a: <span>La maladresse n'est pas un trait de caractère — <strong style={{color:"#D9612F"}}>c'est un schéma corporel et une coordination qui se travaillent.</strong></span>, e: "💥" },
+            { q: "« Le pédiatre dit que tout va bien mais j'ai un doute »", a: <span>Le pédiatre vérifie la santé. <strong style={{color:"#D9612F"}}>La psychomotricité, c'est le développement global.</strong> Ce n'est pas la même chose.</span>, e: "🤔" },
           ].map((item, i) => (
-            <div key={i} style={{ background: "#FFFFFF", borderRadius: 20, padding: "20px 22px", marginBottom: 12, boxShadow: "0 2px 12px rgba(180,80,60,0.07)", border: "1px solid #FFE8E8" }}>
+            <div key={i} style={{ background: "#FFFFFF", borderRadius: 20, padding: "20px 22px", marginBottom: 12, boxShadow: "0 2px 12px rgba(180,80,60,0.07)", border: "1px solid #F1D7BE" }}>
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                 <span style={{ fontSize: 28, flexShrink: 0, marginTop: 2 }}>{item.e}</span>
                 <div>
-                  <div style={{ fontSize: 15, fontWeight: 800, color: "#3D3530", fontStyle: "italic", lineHeight: 1.4 }}>{item.q}</div>
-                  <div style={{ fontSize: 13, color: "#5C544F", marginTop: 6, lineHeight: 1.7 }}>{item.a}</div>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: "#463B33", fontStyle: "italic", lineHeight: 1.4 }}>{item.q}</div>
+                  <div style={{ fontSize: 13, color: "#7E7064", marginTop: 6, lineHeight: 1.7 }}>{item.a}</div>
                 </div>
               </div>
             </div>
@@ -505,12 +505,12 @@ export default function LandingPage({ initialPath = "/" }) {
           <div style={{ textAlign: "center", marginBottom: 28 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: P.peche, borderRadius: 20, padding: "8px 18px", marginBottom: 14 }}>
               <span style={{ fontSize: 16 }}>👩‍⚕️</span>
-              <span style={{ fontWeight: 700, fontSize: 12, color: "#D4845A" }}>Créée par une psychomotricienne D.E.</span>
+              <span style={{ fontWeight: 700, fontSize: 12, color: "#D9612F" }}>Créée par une psychomotricienne D.E.</span>
             </div>
             <h2 style={{ fontSize: 28, fontWeight: 800, lineHeight: 1.2 }}>
               Gromi sait exactement<br />ce dont votre enfant a besoin
             </h2>
-            <p style={{ fontSize: 15, color: "#8A7F76", marginTop: 10 }}>Pas de contenu générique. Chaque activité cible un jalon de développement précis.</p>
+            <p style={{ fontSize: 15, color: "#7E7064", marginTop: 10 }}>Pas de contenu générique. Chaque activité cible un jalon de développement précis.</p>
           </div>
 
           {[
@@ -525,8 +525,8 @@ export default function LandingPage({ initialPath = "/" }) {
             }}>
               <div style={{ width: 50, height: 50, borderRadius: 16, background: f.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, flexShrink: 0 }}>{f.icon}</div>
               <div>
-                <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 4, color: "#3D3530" }}>{f.title}</div>
-                <div style={{ fontSize: 13, color: "#5C544F", lineHeight: 1.7 }}>{f.desc}</div>
+                <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 4, color: "#463B33" }}>{f.title}</div>
+                <div style={{ fontSize: 13, color: "#7E7064", lineHeight: 1.7 }}>{f.desc}</div>
               </div>
             </div>
           ))}
@@ -539,19 +539,19 @@ export default function LandingPage({ initialPath = "/" }) {
           <div style={{ textAlign: "center", marginBottom: 24 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#FFF0E5", borderRadius: 20, padding: "6px 16px", marginBottom: 14 }}>
               <span style={{ fontSize: 14 }}>📱</span>
-              <span style={{ fontWeight: 700, fontSize: 12, color: "#D4845A" }}>L'application en vrai</span>
+              <span style={{ fontWeight: 700, fontSize: 12, color: "#D9612F" }}>L'application en vrai</span>
             </div>
-            <h2 style={{ fontSize: "clamp(20px, 5vw, 26px)", fontWeight: 800, color: "#3D3530", lineHeight: 1.3 }}>
+            <h2 style={{ fontSize: "clamp(20px, 5vw, 26px)", fontWeight: 800, color: "#463B33", lineHeight: 1.3 }}>
               Activité · Progression · Bilan
             </h2>
-            <p style={{ fontSize: 13, color: "#8A7F76", marginTop: 6 }}>Glissez pour voir les écrans</p>
+            <p style={{ fontSize: 13, color: "#7E7064", marginTop: 6 }}>Glissez pour voir les écrans</p>
           </div>
-          <Carousel screens={["/s2.png", "/s3.png", "/s4.png", "/s5.png", "/s6.png"]} />
+          <Carousel screens={["/capture-accueil.png", "/capture-bilan.png", "/capture-resultats-bilan.png", "/capture-progres.png"]} />
         </Center>
       </Section>
 
       {/* ============ TÉMOIGNAGES (fictifs pour le prototype) ============ */}
-      <Section bg="#F0F6FF">
+      <Section bg="#D4F1ED">
         <Center>
           <h2 style={{ fontSize: 26, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>
             Ils ont testé. Ils recommandent.
@@ -564,8 +564,8 @@ export default function LandingPage({ initialPath = "/" }) {
           ].map((t, i) => (
             <div key={i} style={{ background: "#FFFFFF", borderRadius: 20, padding: "20px 22px", marginBottom: 10, boxShadow: "0 2px 12px rgba(100,140,200,0.08)" }}>
               <div style={{ fontSize: 14, color: orange, marginBottom: 4 }}>{"★".repeat(t.stars)}</div>
-              <div style={{ fontSize: 14, color: "#3D3530", lineHeight: 1.7, fontStyle: "italic", marginBottom: 8, borderLeft: "3px solid #F5D8C4", paddingLeft: 12 }}>« {t.text} »</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#8A7F76" }}>— {t.name}</div>
+              <div style={{ fontSize: 14, color: "#463B33", lineHeight: 1.7, fontStyle: "italic", marginBottom: 8, borderLeft: "3px solid #FFE7DA", paddingLeft: 12 }}>« {t.text} »</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#7E7064" }}>— {t.name}</div>
             </div>
           ))}
         </Center>
@@ -585,8 +585,8 @@ export default function LandingPage({ initialPath = "/" }) {
             { q: "C'est adapté aussi aux enfants plus grands (6-12 ans) ?", a: "Oui ! Concentration, écriture, coordination, gestion des émotions, confiance en soi — ce sont des enjeux majeurs en primaire. Gromi couvre de la naissance jusqu'à 12 ans avec des activités adaptées à chaque âge." },
           ].map((item, i) => (
             <div key={i} style={{ background: "#fff", borderRadius: 20, padding: "18px 20px", marginBottom: 8, boxShadow: "0 2px 10px rgba(180,160,140,0.08)" }}>
-              <div style={{ fontSize: 14, fontWeight: 800, color: "#3D3530", marginBottom: 6 }}>{item.q}</div>
-              <div style={{ fontSize: 13, color: "#5C544F", lineHeight: 1.7 }}>{item.a}</div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: "#463B33", marginBottom: 6 }}>{item.q}</div>
+              <div style={{ fontSize: 13, color: "#7E7064", lineHeight: 1.7 }}>{item.a}</div>
             </div>
           ))}
         </Center>
@@ -598,10 +598,10 @@ export default function LandingPage({ initialPath = "/" }) {
           <div style={{ textAlign: "center" }}>
             <div style={{ width: 72, height: 72, borderRadius: 22, background: P.peche, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, margin: "0 auto 14px" }}>👩‍⚕️</div>
             <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Qui est derrière Gromi ?</h2>
-            <p style={{ fontSize: 14, color: "#8A7F76", lineHeight: 1.7 }}>
+            <p style={{ fontSize: 14, color: "#7E7064", lineHeight: 1.7 }}>
               Psychomotricienne diplômée d'État, j'accompagne les enfants et leurs parents depuis des années. Sur TikTok (<strong>Club Ludique</strong>, 90 000 abonnés), je partage déjà mes conseils au quotidien. Gromi, c'est tout ce que je sais — condensé dans une app qui s'adapte à votre enfant.
             </p>
-            <p style={{ fontSize: 14, color: "#FFFFFF", fontWeight: 800, marginTop: 16, background: "#D4845A", borderRadius: 14, padding: "12px 18px", lineHeight: 1.5 }}>
+            <p style={{ fontSize: 14, color: "#FFFFFF", fontWeight: 800, marginTop: 16, background: "#214E78", borderRadius: 14, padding: "12px 18px", lineHeight: 1.5 }}>
               Chaque activité de Gromi, c'est ce que je ferais si votre enfant était dans mon cabinet.
             </p>
           </div>
@@ -609,7 +609,7 @@ export default function LandingPage({ initialPath = "/" }) {
       </Section>
 
       {/* ============ CTA FINAL — urgence émotionnelle ============ */}
-      <Section bg="#C4540A" style={{ padding: "60px 24px 70px", textAlign: "center" }}>
+      <Section className="brand-dark" bg="#214E78" style={{ padding: "60px 24px 70px", textAlign: "center" }}>
 
         <Center max={500}>
           <Gromi size={90} />
@@ -618,22 +618,22 @@ export default function LandingPage({ initialPath = "/" }) {
           </h2>
           <p style={{ fontSize: 15, color: "#A09A92", marginTop: 10, marginBottom: 24, lineHeight: 1.6 }}>
             Le cerveau de votre enfant se développe à une vitesse incroyable.<br />
-            <strong style={{ color: "#F5D8C4" }}>10 minutes par jour peuvent tout changer.</strong>
+            <strong style={{ color: "#FFE7DA" }}>10 minutes par jour peuvent tout changer.</strong>
           </p>
           <EmailBox {...boxProps} />
-          <p style={{ fontSize: 12, color: "#6B6560", marginTop: 10 }}>Lancement bientôt · Inscription gratuite · Pas de spam</p>
+          <p style={{ fontSize: 12, color: "#DDEAFB", marginTop: 10 }}>Lancement bientôt · Inscription gratuite · Pas de spam</p>
         </Center>
       </Section>
 
       {/* ============ FOOTER ============ */}
-      <footer style={{ background: "#3D3530", color: "#A09A92", padding: "28px 24px", textAlign: "center" }}>
+      <footer style={{ background: "#214E78", color: "#DDEAFB", padding: "28px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 500, margin: "0 auto" }}>
           <div style={{ fontSize: 18, fontWeight: 800, color: "#F5EDE2", marginBottom: 4 }}>Gromi</div>
           <div style={{ fontSize: 11, marginBottom: 12 }}>L'app créée par Club Ludique</div>
           <div style={{ fontSize: 10, display: "flex", gap: 14, justifyContent: "center", marginBottom: 12 }}>
             <span>Mentions légales</span><span>Confidentialité</span><span>Contact</span>
           </div>
-          <div style={{ fontSize: 9, color: "#6B6560" }}>© 2026 Gromi · Fait avec ❤️ par une psychomotricienne D.E.</div>
+          <div style={{ fontSize: 9, color: "#DDEAFB" }}>© 2026 Gromi · Fait avec ❤️ par une psychomotricienne D.E.</div>
         </div>
       </footer>
     </div>
