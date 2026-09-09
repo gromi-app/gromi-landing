@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://mfucdlmvhncetfozgqbp.supabase.co; base-uri 'none'; form-action 'self'">
+  <title>Nouveau mot de passe · Gromi</title>
+  <link rel="stylesheet" href="/support/gromi.css">
+  <script src="/support/public-config.js" defer></script>
+  <script src="/support/password-reset.js" defer></script>
+</head>
+<body>
+  <main class="card">
+    <a class="brand" href="/">GROMI</a>
+    <span class="eyebrow">TON COMPTE, EN TOUTE SIMPLICITÉ</span>
+    <h1>Un nouveau<br>mot de passe</h1>
+    <p id="status" role="status" aria-live="polite">Vérification de ton lien…</p>
+    <form id="password-form" hidden>
+      <label for="password">Nouveau mot de passe</label>
+      <input id="password" type="password" autocomplete="new-password" minlength="6" required>
+      <p class="small">6 caractères minimum. Choisis un mot de passe que tu n’utilises pas ailleurs.</p>
+      <label for="confirmation">Confirmer le mot de passe</label>
+      <input id="confirmation" type="password" autocomplete="new-password" minlength="6" required>
+      <p id="form-error" role="alert" hidden></p>
+      <button id="save" type="submit">Enregistrer mon mot de passe</button>
+    </form>
+    <section id="request-section" hidden>
+      <h2>Recevoir un nouveau lien</h2>
+      <form id="request-form">
+        <label for="email">Adresse email de ton compte</label>
+        <input id="email" type="email" autocomplete="email" required>
+        <button id="request" type="submit">Recevoir le lien</button>
+        <p id="request-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <section id="success" hidden>
+      <p>Tu peux fermer cette page et revenir dans Gromi pour te connecter avec ton nouveau mot de passe.</p>
+      <a class="button secondary" href="gromi://login">Ouvrir Gromi</a>
+      <p class="small">Pendant les tests dans Expo Go, reviens simplement dans Expo Go.</p>
+    </section>
+    <footer><a href="/assistance/">Besoin d’aide ?</a> · <a href="/confidentialite/">Confidentialité</a></footer>
+  </main>
+</body>
+</html>
