@@ -631,7 +631,7 @@ export default function LandingPage({ initialPath = "/" }) {
           <div style={{ fontSize: 18, fontWeight: 800, color: "#F5EDE2", marginBottom: 4 }}>Gromi</div>
           <div style={{ fontSize: 11, marginBottom: 12 }}>L'app créée par Club Ludique</div>
           <div style={{ fontSize: 10, display: "flex", gap: 14, justifyContent: "center", marginBottom: 12 }}>
-            <span>Mentions légales</span><span>Confidentialité</span><span>Contact</span>
+            <a href="/mentions-legales/" style={{ color: "inherit" }}>Mentions légales</a><span>Confidentialité</span><span>Contact</span>
           </div>
           <div style={{ fontSize: 9, color: "#DDEAFB" }}>© 2026 Gromi · Fait avec ❤️ par une psychomotricienne D.E.</div>
         </div>
