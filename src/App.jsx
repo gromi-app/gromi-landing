@@ -84,7 +84,7 @@ const Carousel = ({ screens }) => {
   );
 };
 
-const AGE_RANGES = ["0–1 an", "1–3 ans", "3–6 ans", "6–9 ans", "9–12 ans"];
+const AGE_RANGES = ["0–1 an", "1–3 ans", "3–6 ans", "6–9 ans", "9–10 ans"];
 const BOOK_AGE_RANGES = ["Tous les âges", "3-6 ans", "6-8 ans", "8-10 ans"];
 const orange = "#FF8A5B";
 
@@ -283,7 +283,7 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
             Le problème des cahiers,<br />c'est qu'ils s'arrêtent.
           </h2>
           <p style={{ fontSize: "clamp(17px, 2vw, 23px)", lineHeight: 1.6, color: "#7E7064", maxWidth: 860, margin: "0 auto 40px" }}>
-            Votre enfant, lui, continue de grandir. <strong style={{ color: "#463B33", fontWeight: 800 }}>Gromi</strong> est l'app que je construis pour prendre le relais : un bilan psychomoteur, puis une activité adaptée chaque jour, de la naissance à 12 ans.
+            Votre enfant, lui, continue de grandir. <strong style={{ color: "#463B33", fontWeight: 800 }}>Gromi</strong> est l'app que je construis pour prendre le relais : un bilan psychomoteur, puis une activité adaptée chaque jour, de la naissance à 10 ans.
           </p>
 
           {[
@@ -414,7 +414,7 @@ export default function LandingPage({ initialPath = "/" }) {
             « Est-ce que mon enfant<br />se développe <span style={{ color: "#D9612F" }}>bien</span> ? »
           </h1>
           <p className="fu3" style={{ fontSize: 17, color: "#7E7064", marginTop: 14, lineHeight: 1.6, position: "relative" }}>
-            Vous vous posez cette question. Tous les parents se la posent. De la naissance jusqu'à 12 ans, <strong style={{ color: "#D9612F", fontWeight: 800 }}>Gromi</strong> vous donne la réponse — et les outils pour l'accompagner à chaque étape.
+            Vous vous posez cette question. Tous les parents se la posent. De la naissance jusqu'à 10 ans, <strong style={{ color: "#D9612F", fontWeight: 800 }}>Gromi</strong> vous donne la réponse — et les outils pour l'accompagner à chaque étape.
           </p>
           <div className="fu4" style={{ marginTop: 28, position: "relative" }}>
             <EmailBox {...boxProps} />
@@ -582,7 +582,7 @@ export default function LandingPage({ initialPath = "/" }) {
             { q: "10 minutes par jour, ça suffit vraiment ?", a: "Oui. La régularité bat l'intensité. 10 min/jour d'activité ciblée, c'est un vrai complément au quotidien. Ça ne remplace pas un suivi professionnel si nécessaire, mais ça fait une vraie différence pour tous les enfants." },
             { q: "C'est différent de YouTube ou des blogs parentalité ?", a: "Totalement. Gromi s'adapte à VOTRE enfant, à SON âge exact, à SES jalons en cours. Ce n'est pas du contenu générique — c'est un programme personnalisé créé par une psychomotricienne." },
             { q: "Je ne suis pas professionnelle, je vais savoir faire ?", a: "Chaque activité est expliquée étape par étape, avec le matériel du quotidien. C'est fait pour les parents, pas pour les pros. Si vous savez jouer avec votre enfant, vous savez utiliser Gromi." },
-            { q: "C'est adapté aussi aux enfants plus grands (6-12 ans) ?", a: "Oui ! Concentration, écriture, coordination, gestion des émotions, confiance en soi — ce sont des enjeux majeurs en primaire. Gromi couvre de la naissance jusqu'à 12 ans avec des activités adaptées à chaque âge." },
+            { q: "C'est adapté aussi aux enfants plus grands (6-10 ans) ?", a: "Oui ! Concentration, écriture, coordination, gestion des émotions, confiance en soi — ce sont des enjeux majeurs en primaire. Gromi couvre de la naissance jusqu'à 10 ans avec des activités adaptées à chaque âge." },
           ].map((item, i) => (
             <div key={i} style={{ background: "#fff", borderRadius: 20, padding: "18px 20px", marginBottom: 8, boxShadow: "0 2px 10px rgba(180,160,140,0.08)" }}>
               <div style={{ fontSize: 14, fontWeight: 800, color: "#463B33", marginBottom: 6 }}>{item.q}</div>

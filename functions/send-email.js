@@ -24,7 +24,7 @@ export async function onRequestPost(context) {
             <div style="padding: 36px 32px;">
               <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">Bonjour,</p>
               <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">
-                Vous êtes bien inscrit(e) sur la liste d'attente de <strong>Gromi</strong>, l'application de suivi du développement psychomoteur de l'enfant (0–12 ans).
+                Vous êtes bien inscrit(e) sur la liste d'attente de <strong>Gromi</strong>, l'application de suivi du développement psychomoteur de l'enfant (0–10 ans).
               </p>
               <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">
                 Je vous enverrai un email dès que l'application sera disponible — vous serez parmi les premiers à y avoir accès.
