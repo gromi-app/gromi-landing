@@ -546,7 +546,7 @@ export default function LandingPage({ initialPath = "/" }) {
             </h2>
             <p style={{ fontSize: 13, color: "#7E7064", marginTop: 6 }}>Glissez pour voir les écrans</p>
           </div>
-          <Carousel screens={["/capture-accueil.png", "/capture-bilan.png", "/capture-resultats-bilan.png", "/capture-progres.png"]} />
+          <Carousel screens={["/capture-accueil.png", "/capture-bilan.png", "/capture-resultats-bilan.png", "/capture-progres.png", "/capture-defi.png"]} />
         </Center>
       </Section>
 
