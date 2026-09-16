@@ -15,7 +15,7 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         from: "Louise - Gromi <bonjour@gromi.fr>",
         to: [email],
-        subject: "🎉 Tu es sur la liste d'attente Gromi !",
+        subject: "Votre inscription à l’alerte de lancement Gromi",
         html: `
           <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #FDF8F2; border-radius: 20px; overflow: hidden;">
             <div style="background: #D4845A; padding: 36px 32px; text-align: center;">
@@ -24,7 +24,7 @@ export async function onRequestPost(context) {
             <div style="padding: 36px 32px;">
               <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">Bonjour,</p>
               <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">
-                Vous êtes bien inscrit(e) sur la liste d'attente de <strong>Gromi</strong>, l'application de suivi du développement psychomoteur de l'enfant (0–10 ans).
+                Vous êtes bien inscrit(e) sur la liste d'attente de <strong>Gromi</strong>, l’application d’activités sans écran pour les enfants de 3 mois à 10 ans et 11 mois, guidées par leurs parents.
               </p>
               <p style="font-size: 16px; color: #3D3530; line-height: 1.7;">
                 Je vous enverrai un email dès que l'application sera disponible — vous serez parmi les premiers à y avoir accès.

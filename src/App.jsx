@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { supabase } from "./supabase.js";
 
-const GROMI_IMG = "/gromi-logo.jpg";
+const GROMI_IMG = "/gromi-logo-2026.png";
 
 const Gromi = ({ size = 120 }) => (
   <div style={{ width: size, height: size, display: "inline-block", animation: "gromiFloat 3s ease-in-out infinite" }}>
@@ -24,7 +24,7 @@ const Carousel = ({ screens }) => {
   const n = screens.length;
 
   const goTo = (i) => { setCurrent(Math.max(0, Math.min(n - 1, i))); setOffset(0); };
-  const onStart = (x) => { startX.current = x; dragging.current = true; };
+  const onStart = (x) => { startX.current = x; dragDelta.current = 0; dragging.current = true; };
   const onMove = (x) => { if (!dragging.current) return; dragDelta.current = x - startX.current; setOffset(dragDelta.current); };
   const onEnd = () => {
     if (!dragging.current) return;
@@ -41,7 +41,7 @@ const Carousel = ({ screens }) => {
         {[["←", -1], ["→", 1]].map(([arrow, dir]) => {
           const disabled = dir === -1 ? current === 0 : current === n - 1;
           return (
-            <button key={dir} onClick={() => goTo(current + dir)} disabled={disabled} style={{
+            <button aria-label={dir === -1 ? "Écran précédent" : "Écran suivant"} key={dir} onClick={() => goTo(current + dir)} disabled={disabled} style={{
               position: "absolute", top: "50%", transform: "translateY(-50%)",
               [dir === -1 ? "left" : "right"]: -18,
               width: 34, height: 34, borderRadius: "50%", border: "none",
@@ -74,7 +74,7 @@ const Carousel = ({ screens }) => {
       {/* Dots */}
       <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 16 }}>
         {screens.map((_, i) => (
-          <button key={i} onClick={() => goTo(i)} style={{
+          <button aria-label={`Afficher l’écran ${i + 1}`} key={i} onClick={() => goTo(i)} style={{
             width: i === current ? 22 : 7, height: 7, borderRadius: 4, border: "none", padding: 0, cursor: "pointer",
             background: i === current ? "#D9612F" : "#E2D3BF", transition: "all 0.3s",
           }} />
@@ -84,7 +84,7 @@ const Carousel = ({ screens }) => {
   );
 };
 
-const AGE_RANGES = ["0–1 an", "1–3 ans", "3–6 ans", "6–9 ans", "9–10 ans"];
+const AGE_RANGES = ["3–11 mois", "1–2 ans", "3–5 ans", "6–8 ans", "9–10 ans et 11 mois"];
 const BOOK_AGE_RANGES = ["Tous les âges", "3-6 ans", "6-8 ans", "8-10 ans"];
 const orange = "#FF8A5B";
 
@@ -109,6 +109,13 @@ const StepTitle = ({ number, children }) => (
     <h2 style={{ fontSize: "clamp(20px, 2.4vw, 27px)", lineHeight: 1.15, fontWeight: 800, color: "#463B33" }}>{children}</h2>
   </div>
 );
+
+const SiteFooter = () => <footer style={{ background: "#214E78", color: "#DDEAFB", padding: "30px 24px", textAlign: "center" }}>
+  <strong style={{ fontSize: 22 }}>Gromi</strong><p style={{ margin: "8px 0 18px" }}>Apprendre et évoluer ensemble</p>
+  <nav aria-label="Informations et assistance" style={{ display: "flex", flexWrap: "wrap", gap: 18, justifyContent: "center", fontSize: 14 }}>
+    <a href="/mentions-legales/">Mentions légales</a><a href="/confidentialite/">Confidentialité</a><a href="/conditions-utilisation/">Conditions</a><a href="/assistance/">Assistance</a><a href="/suppression-compte/">Suppression du compte</a><a href="mailto:gromi.contact@gmail.com">Contact</a>
+  </nav><p style={{ fontSize: 12, marginTop: 18 }}>© 2026 Gromi · Louise Calon Godet</p>
+</footer>;
 
 const ActivityBooksPage = ({ initialBookSlug = null }) => {
   const initialBook = ACTIVITY_BOOKS.find((book) => book.slug === initialBookSlug) ?? null;
@@ -182,7 +189,7 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
             {isBookLanding ? (
               <>{initialBook.pitch} Ce cahier est <strong style={{ color: "#463B33", fontWeight: 800 }}>gratuit</strong> : laissez votre email, je vous l'envoie.</>
             ) : (
-              <>Le cirque, les dinosaures, les super-héros, les pirates, l'espace, les fonds marins... Ces cahiers étaient vendus en boutique. Aujourd'hui ils sont <strong style={{ color: "#463B33", fontWeight: 800 }}>gratuits</strong> : choisissez celui qui correspond à votre enfant, je vous l'envoie par email.</>
+              <>Le cirque, les dinosaures, les super-héros, les pirates, l'espace, les fonds marins... Ces cahiers sont <strong style={{ color: "#463B33", fontWeight: 800 }}>gratuits</strong> : choisissez celui qui correspond à votre enfant, je vous l'envoie par email.</>
             )}
           </p>
         </div>
@@ -217,7 +224,7 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
           )}
 
           <StepTitle number={isBookLanding ? "1" : "2"}>{isBookLanding ? "Le cahier offert" : "Le cahier que vous voulez recevoir"}</StepTitle>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18, marginBottom: 50 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: 18, marginBottom: 50 }}>
             {visibleBooks.map((book) => {
               const active = chosenBook?.slug === book.slug;
               return (
@@ -259,12 +266,13 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
                 <p style={{ fontSize: 16, color: "#7E7064", lineHeight: 1.6, marginBottom: 18 }}>
                   {isBookLanding ? `Ajoutez votre email pour recevoir ${chosenBook?.title ?? "ce cahier"}.` : "Choisissez un cahier, ajoutez votre email, et je saurai exactement lequel vous envoyer."}
                 </p>
+                <p style={{ fontSize: 13, marginBottom: 14 }}>Votre email et le cahier choisi servent à traiter votre demande. <a href="/confidentialite/" style={{ textDecoration: "underline" }}>Utilisation de vos données et contact</a>.</p>
                 <form action="/send-book-email" method="POST" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                   <input type="hidden" name="bookTitle" value={chosenBook?.title ?? ""} />
                   <input type="hidden" name="bookSlug" value={chosenBook?.slug ?? ""} />
                   <input type="hidden" name="childAgeRange" value={selectedAge} />
                   <input type="hidden" name="downloadUrl" value={chosenBook?.downloadUrl ?? ""} />
-                  <input type="email" name="email" required placeholder="votre@email.com" defaultValue={email} onChange={(e) => setEmail(e.target.value)} style={{ flex: "1 1 260px", border: "2px solid #F1D7BE", borderRadius: 16, padding: "15px 18px", fontSize: 16, fontFamily: "inherit", fontWeight: 700, color: "#463B33", background: "#fff" }} />
+                  <input type="email" name="email" required aria-label="Votre adresse email" placeholder="votre@email.com" defaultValue={email} onChange={(e) => setEmail(e.target.value)} style={{ flex: "1 1 260px", border: "2px solid #F1D7BE", borderRadius: 16, padding: "15px 18px", fontSize: 16, fontFamily: "inherit", fontWeight: 700, color: "#463B33", background: "#fff" }} />
                   <button type="submit" style={{ border: "none", borderRadius: 16, background: "#FF8A5B", color: "#214E78", padding: "15px 24px", fontFamily: "inherit", fontSize: 16, fontWeight: 800, cursor: "pointer", boxShadow: "0 10px 24px rgba(255,138,91,0.28)", opacity: 1 }}>
                     Recevoir le cahier
                   </button>
@@ -283,13 +291,13 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
             Le problème des cahiers,<br />c'est qu'ils s'arrêtent.
           </h2>
           <p style={{ fontSize: "clamp(17px, 2vw, 23px)", lineHeight: 1.6, color: "#7E7064", maxWidth: 860, margin: "0 auto 40px" }}>
-            Votre enfant, lui, continue de grandir. <strong style={{ color: "#463B33", fontWeight: 800 }}>Gromi</strong> est l'app que je construis pour prendre le relais : un bilan psychomoteur, puis une activité adaptée chaque jour, de la naissance à 10 ans.
+            Votre enfant, lui, continue de grandir. <strong style={{ color: "#463B33", fontWeight: 800 }}>Gromi</strong> est l'app que je construis pour prendre le relais : un questionnaire à partir de vos observations, puis des activités sans écran pour votre enfant, de 3 mois à 10 ans et 11 mois. Deux activités gratuites par semaine ; une activité quotidienne avec Premium au lancement.
           </p>
 
           {[
-            { color: "#5B95D6", title: "Un bilan des acquisitions de votre enfant", text: "Vous situez précisément votre enfant sur les 5 domaines du développement." },
-            { color: "#61B276", title: "Une activité par jour, 10-15 min", text: "Avec le matériel de la maison, choisie pour SON âge et SES besoins." },
-            { color: "#8067C8", title: "Des progrès que vous voyez", text: "On réévalue régulièrement : les acquis se débloquent sous vos yeux." },
+            { color: "#5B95D6", title: "Un bilan des acquisitions de votre enfant", text: "Vous faites le point sur vos observations dans cinq domaines adaptés à son âge. Ce questionnaire ne constitue pas un diagnostic." },
+            { color: "#61B276", title: "Des activités avec le matériel de la maison", text: "Papier, feutres, ballon, oreillers… Vous lisez les consignes, votre enfant réalise l’activité sans écran." },
+            { color: "#8067C8", title: "Un suivi au fil des mois", text: "Retrouvez vos observations et refaites le bilan mensuel pour adapter les activités." },
           ].map((item) => (
             <div key={item.title} style={{ background: "#FFFAF6", borderRadius: 24, padding: "24px 28px", marginBottom: 16, display: "flex", gap: 22, textAlign: "left", alignItems: "center" }}>
               <div style={{ width: 14, height: 74, borderRadius: 999, background: item.color, flexShrink: 0 }} />
@@ -304,17 +312,12 @@ const ActivityBooksPage = ({ initialBookSlug = null }) => {
             Découvrir Gromi, l'application
           </a>
           <p style={{ fontSize: "clamp(16px, 1.8vw, 20px)", lineHeight: 1.55, color: "#7E7064", fontStyle: "italic", marginTop: 22 }}>
-            Votre psychomotricienne de poche, pour accompagner le développement de votre enfant jour après jour.
+            Des idées pour apprendre et évoluer ensemble. Gromi ne remplace pas un bilan psychomoteur réalisé par un professionnel.
           </p>
         </div>
       </section>
 
-      <footer style={{ background: "#214E78", color: "#DDEAFB", padding: "42px 24px", textAlign: "center" }}>
-        <div style={{ maxWidth: 500, margin: "0 auto" }}>
-          <div style={{ fontSize: 34, fontWeight: 800, color: "#F5EDE2", marginBottom: 12 }}>Gromi</div>
-          <div style={{ fontSize: 18 }}>L'app créée par Club Ludique</div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 };
@@ -345,7 +348,7 @@ const EmailBox = ({ email, setEmail, ageRange, setAgeRange, submitted, loading, 
         ))}
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
-        <input type="email" placeholder="votre@email.com" value={email} onChange={e => setEmail(e.target.value)}
+        <input type="email" aria-label="Votre adresse email" placeholder="votre@email.com" value={email} onChange={e => setEmail(e.target.value)}
           onKeyDown={e => e.key === "Enter" && onSubmit()}
           style={{ flex: "1 1 200px", padding: "14px 18px", borderRadius: 14, border: "2px solid #E2D3BF", fontSize: 14, fontFamily: "inherit", fontWeight: 600, color: "#463B33", background: "#fff", minWidth: 180 }} />
         <button onClick={onSubmit} disabled={loading}
@@ -353,6 +356,7 @@ const EmailBox = ({ email, setEmail, ageRange, setAgeRange, submitted, loading, 
           {loading ? "…" : "Je veux être prévenu 🚀"}
         </button>
       </div>
+      <p style={{ fontSize: 12, marginTop: 12, lineHeight: 1.6 }}>Votre email et la tranche d’âge servent à l’alerte demandée. <a href="/confidentialite/" style={{ textDecoration: "underline" }}>Utilisation de vos données et contact</a>.</p>
       {error && <p style={{ fontSize: 12, color: "#D4727B", marginTop: 8, textAlign: "center" }}>{error}</p>}
     </div>
   );
@@ -390,10 +394,7 @@ export default function LandingPage({ initialPath = "/" }) {
     return <ActivityBooksPage initialBookSlug={bookPathMatch[1]} />;
   }
   if (path === "/cahiers" || path === "/cahiers/") {
-    if (typeof window !== "undefined") {
-      window.location.replace("/");
-    }
-    return null;
+    return <ActivityBooksPage />;
   }
 
   return (
@@ -404,238 +405,84 @@ export default function LandingPage({ initialPath = "/" }) {
         .fu1{animation:fadeUp .8s ease forwards}.fu2{animation:fadeUp .8s ease .15s forwards;opacity:0}.fu3{animation:fadeUp .8s ease .3s forwards;opacity:0}.fu4{animation:fadeUp .8s ease .45s forwards;opacity:0}
       `}</style>
 
-      {/* ============ HERO — Émotionnel, la peur du parent ============ */}
-      <Section className="brand-dark" bg="#214E78" style={{ padding: "60px 24px 70px", textAlign: "center", overflow: "hidden", color: "#FFFFFF" }}>
+      <Section className="brand-dark" bg="#214E78" style={{ padding: "60px 24px", textAlign: "center", overflow: "hidden", color: "#FFFFFF" }}>
         <Blob size={200} color={P.rose} top={-60} left={-80} />
-        <Blob size={150} color={P.bleu} top={30} right={-60} />
-        <Center max={560}>
-          <div className="fu1" style={{ position: "relative" }}><Gromi size={120} /></div>
-          <h1 className="fu2" style={{ fontSize: "clamp(28px, 7vw, 44px)", fontWeight: 800, lineHeight: 1.15, marginTop: 16, position: "relative" }}>
-            « Est-ce que mon enfant<br />se développe <span style={{ color: "#D9612F" }}>bien</span> ? »
-          </h1>
-          <p className="fu3" style={{ fontSize: 17, color: "#7E7064", marginTop: 14, lineHeight: 1.6, position: "relative" }}>
-            Vous vous posez cette question. Tous les parents se la posent. De la naissance jusqu'à 10 ans, <strong style={{ color: "#D9612F", fontWeight: 800 }}>Gromi</strong> vous donne la réponse — et les outils pour l'accompagner à chaque étape.
-          </p>
-          <div className="fu4" style={{ marginTop: 28, position: "relative" }}>
-            <EmailBox {...boxProps} />
-            <p style={{ fontSize: 12, color: "#C4BAB0", marginTop: 10 }}>Gratuit. Pas de spam. Juste un email le jour du lancement.</p>
-            <a href="/cahiers" style={{ display: "inline-flex", marginTop: 18, alignItems: "center", justifyContent: "center", borderRadius: 16, padding: "13px 18px", background: "#FFF0E5", color: "#D9612F", fontSize: 14, fontWeight: 800, boxShadow: "0 4px 16px rgba(180,120,70,0.12)" }}>
-              Recevoir un cahier d'activités gratuit
-            </a>
-          </div>
-        </Center>
-      </Section>
-
-      {/* ============ VIDÉO ============ */}
-      <Section style={{ padding: "56px 24px", textAlign: "center" }}>
-        <Center max={480}>
-          <h2 style={{ fontSize: "clamp(20px, 5vw, 28px)", fontWeight: 800, marginBottom: 8 }}>
-            Louise vous explique tout en 1 minute
-          </h2>
-          <p style={{ fontSize: 15, color: "#7E7064", marginBottom: 28 }}>
-            Psychomotricienne D.E. &amp; créatrice de Club Ludique
-          </p>
-          <div style={{
-            position: "relative",
-            width: "100%",
-            maxWidth: 340,
-            margin: "0 auto",
-            borderRadius: 20,
-            overflow: "hidden",
-            boxShadow: "0 8px 40px rgba(180,140,100,0.18)",
-            aspectRatio: "9/16",
-          }}>
-            <iframe
-              src="https://www.youtube.com/embed/u2y3216bnSQ"
-              title="Gromi — Louise explique le concept"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
-            />
-          </div>
-        </Center>
-      </Section>
-
-      {/* ============ STAT CHOC ============ */}
-      <div style={{ background: "#214E78", padding: "48px 24px", textAlign: "center" }}>
-        <Center max={580}>
-          <div style={{ fontSize: "clamp(52px, 12vw, 80px)", fontWeight: 800, color: "#FFFFFF", lineHeight: 1, letterSpacing: "-2px" }}>
-            100%
-          </div>
-          <div style={{ width: 48, height: 4, background: "rgba(255,255,255,0.3)", borderRadius: 2, margin: "16px auto" }} />
-          <p style={{ fontSize: "clamp(15px, 3.5vw, 20px)", color: "#FFFFFF", fontWeight: 600, lineHeight: 1.7, maxWidth: 520, margin: "0 auto" }}>
-            Pendant la petite enfance, <strong style={{ fontWeight: 800 }}>100 % des apprentissages fondamentaux</strong> (lecture, écriture, concentration) dépendent d'un bon socle psychomoteur.
-          </p>
-          <p style={{ fontSize: "clamp(13px, 3vw, 16px)", color: "rgba(255,255,255,0.75)", marginTop: 16, lineHeight: 1.7 }}>
-            Pourtant, <strong style={{ color: "#FFFFFF" }}>les parents manquent d'outils pour les accompagner au quotidien.</strong>
-          </p>
-        </Center>
-      </div>
-
-      {/* ============ LES DOUTES ============ */}
-      <Section bg="#FFF0E5">
-        <Center>
-          <h2 style={{ fontSize: 26, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>
-            Vous reconnaissez-vous ?
-          </h2>
-          {[
-            { q: "« Les enfants de mes amies marchent déjà, pas le mien… »", a: <span>Chaque enfant a son rythme. Mais <strong style={{color:"#D9612F"}}>savoir OÙ il en est et QUOI faire</strong> pour l'accompagner, ça change tout.</span>, e: "😟" },
-            { q: "« Il ne tient pas en place, il n'arrive pas à se concentrer »", a: <span>Ce n'est peut-être pas un problème de comportement — c'est peut-être <strong style={{color:"#D9612F"}}>un besoin psychomoteur non comblé.</strong></span>, e: "🤯" },
-            { q: "« En CE2 son écriture est illisible, il déteste écrire »", a: <span>L'écriture c'est motricité fine + tonus + coordination. <strong style={{color:"#D9612F"}}>Des exercices ciblés peuvent tout débloquer.</strong></span>, e: "✏️" },
-            { q: "« Je ne sais pas si je stimule assez mon enfant »", a: <span>Pas besoin d'être experte. <strong style={{color:"#D9612F"}}>10 minutes par jour</strong> d'activité adaptée font une vraie différence, à tout âge.</span>, e: "😰" },
-            { q: "« En CM1 il est maladroit, il se cogne partout, il casse tout »", a: <span>La maladresse n'est pas un trait de caractère — <strong style={{color:"#D9612F"}}>c'est un schéma corporel et une coordination qui se travaillent.</strong></span>, e: "💥" },
-            { q: "« Le pédiatre dit que tout va bien mais j'ai un doute »", a: <span>Le pédiatre vérifie la santé. <strong style={{color:"#D9612F"}}>La psychomotricité, c'est le développement global.</strong> Ce n'est pas la même chose.</span>, e: "🤔" },
-          ].map((item, i) => (
-            <div key={i} style={{ background: "#FFFFFF", borderRadius: 20, padding: "20px 22px", marginBottom: 12, boxShadow: "0 2px 12px rgba(180,80,60,0.07)", border: "1px solid #F1D7BE" }}>
-              <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <span style={{ fontSize: 28, flexShrink: 0, marginTop: 2 }}>{item.e}</span>
-                <div>
-                  <div style={{ fontSize: 15, fontWeight: 800, color: "#463B33", fontStyle: "italic", lineHeight: 1.4 }}>{item.q}</div>
-                  <div style={{ fontSize: 13, color: "#7E7064", marginTop: 6, lineHeight: 1.7 }}>{item.a}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </Center>
-      </Section>
-
-      {/* ============ LA SOLUTION ============ */}
-      <Section>
-        <Center>
-          <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: P.peche, borderRadius: 20, padding: "8px 18px", marginBottom: 14 }}>
-              <span style={{ fontSize: 16 }}>👩‍⚕️</span>
-              <span style={{ fontWeight: 700, fontSize: 12, color: "#D9612F" }}>Créée par une psychomotricienne D.E.</span>
-            </div>
-            <h2 style={{ fontSize: 28, fontWeight: 800, lineHeight: 1.2 }}>
-              Gromi sait exactement<br />ce dont votre enfant a besoin
-            </h2>
-            <p style={{ fontSize: 15, color: "#7E7064", marginTop: 10 }}>Pas de contenu générique. Chaque activité cible un jalon de développement précis.</p>
-          </div>
-
-          {[
-            { icon: "📋", title: "Un vrai bilan psychomoteur", desc: "20 questions pour évaluer 8 domaines du développement. En 3 minutes. Vous savez exactement où en est votre enfant.", bg: P.bleu },
-            { icon: "🤸", title: "1 activité par jour, 10-15 min", desc: "Gromi choisit l'activité parfaite pour VOTRE enfant, selon SES besoins. Pas ceux du voisin.", bg: P.vert },
-            { icon: "📈", title: "Vous voyez les progrès", desc: "Chaque mois, réévaluez. Vous voyez les jalons passer de « en cours » à « acquis ». C'est concret.", bg: P.jaune },
-          ].map((f, i) => (
-            <div key={i} style={{
-              background: "#fff", borderRadius: 22, padding: 22, marginBottom: 12,
-              display: "flex", gap: 16, alignItems: "flex-start",
-              boxShadow: "0 3px 15px rgba(180,160,140,0.1)",
-            }}>
-              <div style={{ width: 50, height: 50, borderRadius: 16, background: f.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, flexShrink: 0 }}>{f.icon}</div>
-              <div>
-                <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 4, color: "#463B33" }}>{f.title}</div>
-                <div style={{ fontSize: 13, color: "#7E7064", lineHeight: 1.7 }}>{f.desc}</div>
-              </div>
-            </div>
-          ))}
-        </Center>
-      </Section>
-
-      {/* ============ SCREENSHOTS CAROUSEL ============ */}
-      <Section bg="#fff">
-        <Center max={420}>
-          <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#FFF0E5", borderRadius: 20, padding: "6px 16px", marginBottom: 14 }}>
-              <span style={{ fontSize: 14 }}>📱</span>
-              <span style={{ fontWeight: 700, fontSize: 12, color: "#D9612F" }}>L'application en vrai</span>
-            </div>
-            <h2 style={{ fontSize: "clamp(20px, 5vw, 26px)", fontWeight: 800, color: "#463B33", lineHeight: 1.3 }}>
-              Activité · Progression · Bilan
-            </h2>
-            <p style={{ fontSize: 13, color: "#7E7064", marginTop: 6 }}>Glissez pour voir les écrans</p>
-          </div>
-          <Carousel screens={["/capture-accueil.png", "/capture-bilan.png", "/capture-resultats-bilan.png", "/capture-progres.png", "/capture-defi.png"]} />
-        </Center>
-      </Section>
-
-      {/* ============ TÉMOIGNAGES (fictifs pour le prototype) ============ */}
-      <Section bg="#D4F1ED">
-        <Center>
-          <h2 style={{ fontSize: 26, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>
-            Ils ont testé. Ils recommandent.
-          </h2>
-          {[
-            { name: "Marie, maman de Lucas (18 mois)", text: "Je me sentais perdue face à son retard de marche. Gromi m'a montré que tout était normal ET m'a donné les exercices pour l'accompagner. Il marche depuis 3 semaines.", stars: 5 },
-            { name: "Sophie, maman de Léa (5 ans)", text: "L'école me disait qu'elle avait du mal à se concentrer. Avec Gromi, on fait 10 min d'activité chaque soir. Sa maîtresse a vu la différence en 1 mois.", stars: 5 },
-            { name: "Thomas, papa de Noah (8 mois)", text: "Je ne savais pas quoi faire avec un bébé. Gromi me dit exactement quoi faire chaque jour. C'est devenu notre moment père-fils.", stars: 5 },
-            { name: "Claire, maman d'Adam (9 ans)", text: "Son écriture était catastrophique, il détestait les devoirs. Avec les activités de motricité fine et de coordination, il a repris confiance. Maintenant il écrit sans se plaindre.", stars: 5 },
-          ].map((t, i) => (
-            <div key={i} style={{ background: "#FFFFFF", borderRadius: 20, padding: "20px 22px", marginBottom: 10, boxShadow: "0 2px 12px rgba(100,140,200,0.08)" }}>
-              <div style={{ fontSize: 14, color: orange, marginBottom: 4 }}>{"★".repeat(t.stars)}</div>
-              <div style={{ fontSize: 14, color: "#463B33", lineHeight: 1.7, fontStyle: "italic", marginBottom: 8, borderLeft: "3px solid #FFE7DA", paddingLeft: 12 }}>« {t.text} »</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#7E7064" }}>— {t.name}</div>
-            </div>
-          ))}
-        </Center>
-      </Section>
-
-      {/* ============ OBJECTIONS ============ */}
-      <Section>
-        <Center>
-          <h2 style={{ fontSize: 26, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>
-            Vos questions, nos réponses
-          </h2>
-          {[
-            { q: "Mon enfant n'a aucun problème, c'est quand même utile ?", a: "Absolument. Gromi n'est pas pour les enfants « en difficulté ». C'est pour TOUS les enfants — comme le sport entretient un corps sain, la psychomotricité entretient un développement sain." },
-            { q: "10 minutes par jour, ça suffit vraiment ?", a: "Oui. La régularité bat l'intensité. 10 min/jour d'activité ciblée, c'est un vrai complément au quotidien. Ça ne remplace pas un suivi professionnel si nécessaire, mais ça fait une vraie différence pour tous les enfants." },
-            { q: "C'est différent de YouTube ou des blogs parentalité ?", a: "Totalement. Gromi s'adapte à VOTRE enfant, à SON âge exact, à SES jalons en cours. Ce n'est pas du contenu générique — c'est un programme personnalisé créé par une psychomotricienne." },
-            { q: "Je ne suis pas professionnelle, je vais savoir faire ?", a: "Chaque activité est expliquée étape par étape, avec le matériel du quotidien. C'est fait pour les parents, pas pour les pros. Si vous savez jouer avec votre enfant, vous savez utiliser Gromi." },
-            { q: "C'est adapté aussi aux enfants plus grands (6-10 ans) ?", a: "Oui ! Concentration, écriture, coordination, gestion des émotions, confiance en soi — ce sont des enjeux majeurs en primaire. Gromi couvre de la naissance jusqu'à 10 ans avec des activités adaptées à chaque âge." },
-          ].map((item, i) => (
-            <div key={i} style={{ background: "#fff", borderRadius: 20, padding: "18px 20px", marginBottom: 8, boxShadow: "0 2px 10px rgba(180,160,140,0.08)" }}>
-              <div style={{ fontSize: 14, fontWeight: 800, color: "#463B33", marginBottom: 6 }}>{item.q}</div>
-              <div style={{ fontSize: 13, color: "#7E7064", lineHeight: 1.7 }}>{item.a}</div>
-            </div>
-          ))}
-        </Center>
-      </Section>
-
-      {/* ============ QUI SUIS-JE ============ */}
-      <Section>
-        <Center max={500}>
-          <div style={{ textAlign: "center" }}>
-            <div style={{ width: 72, height: 72, borderRadius: 22, background: P.peche, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, margin: "0 auto 14px" }}>👩‍⚕️</div>
-            <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Qui est derrière Gromi ?</h2>
-            <p style={{ fontSize: 14, color: "#7E7064", lineHeight: 1.7 }}>
-              Psychomotricienne diplômée d'État, j'accompagne les enfants et leurs parents depuis des années. Sur TikTok (<strong>Club Ludique</strong>, 90 000 abonnés), je partage déjà mes conseils au quotidien. Gromi, c'est tout ce que je sais — condensé dans une app qui s'adapte à votre enfant.
-            </p>
-            <p style={{ fontSize: 14, color: "#FFFFFF", fontWeight: 800, marginTop: 16, background: "#214E78", borderRadius: 14, padding: "12px 18px", lineHeight: 1.5 }}>
-              Chaque activité de Gromi, c'est ce que je ferais si votre enfant était dans mon cabinet.
-            </p>
-          </div>
-        </Center>
-      </Section>
-
-      {/* ============ CTA FINAL — urgence émotionnelle ============ */}
-      <Section className="brand-dark" bg="#214E78" style={{ padding: "60px 24px 70px", textAlign: "center" }}>
-
-        <Center max={500}>
-          <Gromi size={90} />
-          <h2 style={{ fontSize: 28, fontWeight: 800, marginTop: 10, lineHeight: 1.2, color: "#FFFFFF" }}>
-            Les premières années<br />ne se rattrapent pas.
-          </h2>
-          <p style={{ fontSize: 15, color: "#A09A92", marginTop: 10, marginBottom: 24, lineHeight: 1.6 }}>
-            Le cerveau de votre enfant se développe à une vitesse incroyable.<br />
-            <strong style={{ color: "#FFE7DA" }}>10 minutes par jour peuvent tout changer.</strong>
-          </p>
+        <Center max={660}>
+          <Gromi size={110} />
+          <h1 style={{ fontSize: "clamp(29px, 6vw, 46px)", lineHeight: 1.18, marginTop: 20 }}>Apprendre ensemble,<br /><span>sans écran pour votre enfant.</span></h1>
+          <p style={{ fontSize: 18, margin: "22px auto", lineHeight: 1.7 }}>Vous lisez les consignes sur votre téléphone, puis partagez l’activité avec votre enfant. Papier, feutres, stylos, ballon, oreillers… Du matériel courant de la maison, pour apprendre et évoluer ensemble.</p>
+          <p style={{ marginBottom: 28, fontWeight: 700 }}>Pour les parents d’enfants de 3 mois à 10 ans et 11 mois.</p>
           <EmailBox {...boxProps} />
-          <p style={{ fontSize: 12, color: "#DDEAFB", marginTop: 10 }}>Lancement bientôt · Inscription gratuite · Pas de spam</p>
+          <p style={{ fontSize: 13, marginTop: 12 }}>Application en préparation · Inscription gratuite à l’alerte de lancement</p>
+          <a href="/cahiers/" style={{ display: "inline-block", marginTop: 20, padding: "14px 20px", borderRadius: 16, background: "#FFF0E5", color: "#214E78", fontWeight: 800 }}>Découvrir les cahiers gratuits</a>
         </Center>
       </Section>
 
-      {/* ============ FOOTER ============ */}
-      <footer style={{ background: "#214E78", color: "#DDEAFB", padding: "28px 24px", textAlign: "center" }}>
-        <div style={{ maxWidth: 500, margin: "0 auto" }}>
-          <div style={{ fontSize: 18, fontWeight: 800, color: "#F5EDE2", marginBottom: 4 }}>Gromi</div>
-          <div style={{ fontSize: 11, marginBottom: 12 }}>L'app créée par Club Ludique</div>
-          <div style={{ fontSize: 10, display: "flex", gap: 14, justifyContent: "center", marginBottom: 12 }}>
-            <a href="/mentions-legales/" style={{ color: "inherit" }}>Mentions légales</a><span>Confidentialité</span><span>Contact</span>
+      <Section bg="#FFF0E5">
+        <Center max={720}>
+          <h2 style={{ fontSize: 28, textAlign: "center", marginBottom: 28 }}>Comment fonctionne Gromi ?</h2>
+          {[
+            { icon: "📋", title: "Vous faites le point", text: "Un questionnaire s’appuie sur vos observations dans cinq domaines adaptés à l’âge de votre enfant. Il aide à choisir les activités ; il ne constitue pas un diagnostic et ne remplace pas un bilan psychomoteur réalisé par un professionnel." },
+            { icon: "🤸", title: "Vous préparez l’activité", text: "Le matériel nécessaire et les consignes sont indiqués avant de commencer. Vous accompagnez votre enfant dans l’activité, sans qu’il ait besoin d’utiliser l’écran." },
+            { icon: "📈", title: "Vous retrouvez votre suivi", text: "Activités réalisées, favoris, notes et bilans sont réunis dans l’application. Un nouveau bilan mensuel permet d’actualiser vos observations et d’adapter les propositions." },
+          ].map(item => <article key={item.title} style={{ background: "#fff", borderRadius: 20, padding: 24, marginBottom: 16 }}>
+            <h3 style={{ fontSize: 21, marginBottom: 10 }}>{item.icon} {item.title}</h3><p style={{ lineHeight: 1.7, color: "#655c53" }}>{item.text}</p>
+          </article>)}
+        </Center>
+      </Section>
+
+      <Section>
+        <Center max={760}>
+          <h2 style={{ fontSize: 28, textAlign: "center", marginBottom: 24 }}>Deux rythmes, selon votre famille</h2>
+          <p style={{ textAlign: "center", marginBottom: 26, color: "#655c53" }}>Offres prévues au lancement. Aucun abonnement n’est vendu sur ce site.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 290px), 1fr))", gap: 20 }}>
+            <article style={{ background: P.bleu, borderRadius: 24, padding: 26 }}><h3 style={{ fontSize: 23 }}>Gratuit</h3><p style={{ fontWeight: 800, margin: "12px 0" }}>Une activité le mercredi et le samedi</p><p style={{ lineHeight: 1.7 }}>Chaque activité reste disponible jusqu’à la suivante. Gromi cible les domaines principaux à accompagner selon le bilan, en commençant par les scores les plus faibles.</p></article>
+            <article style={{ background: P.peche, borderRadius: 24, padding: 26 }}><h3 style={{ fontSize: 23 }}>Premium mensuel</h3><p style={{ fontWeight: 800, margin: "12px 0" }}>Une activité chaque jour</p><p style={{ lineHeight: 1.7 }}>La personnalisation tient aussi compte des sous-domaines et de vos retours. Un seul abonnement bénéficie aux deux coparents liés et à leurs profils enfants.</p><p style={{ fontSize: 14, lineHeight: 1.6, marginTop: 14 }}>Tarifs prévus : 9,99 € / mois en France et Belgique ; 8,99 CHF / mois en Suisse. Abonnement à renouvellement automatique. Pas de formule annuelle ni d’essai gratuit prévus. Le prix sera confirmé dans la boutique avant l’achat.</p></article>
           </div>
-          <div style={{ fontSize: 9, color: "#DDEAFB" }}>© 2026 Gromi · Fait avec ❤️ par une psychomotricienne D.E.</div>
-        </div>
-      </footer>
+          <p style={{ lineHeight: 1.7, marginTop: 24 }}>Une famille relie deux comptes maximum avec un code commun. Les profils créés par l’un ou l’autre et leur suivi enregistré sont partagés.</p>
+          <p style={{ marginTop: 15 }}><a href="/assistance/" style={{ textDecoration: "underline" }}>Consulter les explications sur les activités et le partage familial</a></p>
+        </Center>
+      </Section>
+
+      <Section bg="#F3F7FB">
+        <Center max={440}>
+          <h2 style={{ fontSize: 27, textAlign: "center", marginBottom: 14 }}>Un aperçu de Gromi</h2>
+          <p style={{ lineHeight: 1.6, textAlign: "center", marginBottom: 24 }}>Questionnaire, activité et suivi : découvrez les écrans de présentation. Glissez ou utilisez les flèches.</p>
+          <Carousel screens={["/visuels/01-questionnaire.png", "/visuels/02-activite.png", "/visuels/03-progres.png"]} />
+        </Center>
+      </Section>
+
+      <Section>
+        <Center max={700}>
+          <h2 style={{ fontSize: 28, textAlign: "center", marginBottom: 24 }}>Vos questions, nos réponses</h2>
+          {[
+            { q: "Mon enfant doit-il utiliser un écran ?", a: "Non. L’application sert au parent pour lire les consignes et noter ses observations. L’activité se réalise ensemble, sans écran pour l’enfant, avec du matériel courant de la maison." },
+            { q: "À quels âges s’adresse Gromi ?", a: "Gromi accompagne les parents d’enfants de 3 mois à 10 ans et 11 mois. Les activités sont proposées selon l’âge et les réponses au dernier bilan." },
+            { q: "Comment les activités gratuites sont-elles choisies ?", a: "Les domaines principaux dont le score est inférieur ou égal à 75 % sont proposés en commençant par les scores les plus faibles, puis en alternant. Si tous dépassent 75 %, les domaines varient. Une nouvelle activité arrive le mercredi et le samedi." },
+            { q: "Comment fonctionne la personnalisation Premium ?", a: "Après chaque nouveau bilan, les 14 premières activités réellement terminées explorent les sous-domaines. Ensuite, les propositions alternent les difficultés repérées et l’exploration dans le domaine prévu. Les jours sans activité terminée ne comptent pas. Un nouveau bilan relance le cycle sans effacer l’historique." },
+            { q: "Et si nous ne faisons pas l’activité le jour même ?", a: "En gratuit, elle reste disponible jusqu’au mercredi ou samedi suivant. Avec Premium, l’activité change à minuit dans le fuseau du profil ; une séance déjà commencée peut rester accessible jusqu’à 24 heures après la fin de son créneau. Les jours manqués ne s’accumulent pas." },
+            { q: "Le bilan remplace-t-il une consultation ?", a: "Non. Il repose sur vos observations et aide à proposer des activités familiales. Il ne constitue pas un diagnostic et ne remplace pas un bilan psychomoteur réalisé par un professionnel. Si une difficulté vous préoccupe, demandez conseil à un professionnel." },
+          ].map(item => <details key={item.q} style={{ padding: 20, border: "1px solid #E2D3BF", borderRadius: 16, marginBottom: 12 }}><summary style={{ cursor: "pointer", fontWeight: 800 }}>{item.q}</summary><p style={{ marginTop: 14, lineHeight: 1.7, color: "#655c53" }}>{item.a}</p></details>)}
+        </Center>
+      </Section>
+
+      <Section bg="#FFF0E5">
+        <Center max={600}>
+          <h2 style={{ fontSize: 27, marginBottom: 18 }}>Qui est derrière Gromi ?</h2>
+          <p style={{ lineHeight: 1.8 }}>Je suis Louise Calon Godet, psychomotricienne diplômée d’État et créatrice de Club Ludique. Avec Gromi, je souhaite aider les parents à partager des activités adaptées à leur enfant, avec des consignes simples et du matériel du quotidien.</p>
+          <p style={{ lineHeight: 1.8, marginTop: 15 }}>Gromi est conçu pour un usage familial. Chaque enfant évolue à son rythme ; aucun résultat individuel n’est garanti.</p>
+        </Center>
+      </Section>
+
+      <Section className="brand-dark" bg="#214E78" style={{ textAlign: "center", color: "#fff" }}>
+        <Center max={600}>
+          <h2 style={{ fontSize: 29, marginBottom: 16 }}>Envie d’apprendre et d’évoluer ensemble ?</h2>
+          <p style={{ lineHeight: 1.7, marginBottom: 24 }}>Laissez votre email pour être informé du lancement en France, Belgique et Suisse. L’application sera proposée en français.</p>
+          <EmailBox {...boxProps} />
+          <p style={{ fontSize: 13, marginTop: 12 }}>Une alerte de lancement, pas une inscription à une newsletter générale.</p>
+        </Center>
+      </Section>
+      <SiteFooter />
     </div>
   );
 }

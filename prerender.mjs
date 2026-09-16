@@ -24,6 +24,8 @@ async function prerender() {
     }
 
     fs.writeFileSync(path.join(__dirname, 'dist/index.html'), renderPage('/'))
+    fs.mkdirSync(path.join(__dirname, 'dist/cahiers'), { recursive: true })
+    fs.writeFileSync(path.join(__dirname, 'dist/cahiers/index.html'), renderPage('/cahiers/'))
     const bookRoutes = ['cirque', 'dinosaures', 'super-heros', 'pirates', 'espace', 'fonds-marins']
     for (const route of bookRoutes) {
       const routeDir = path.join(__dirname, 'dist/cahiers', route)
@@ -32,7 +34,8 @@ async function prerender() {
     }
     console.log('✅ Prerendu généré avec succès')
   } catch (e) {
-    console.warn('⚠️  Prérendu ignoré (mode interactif):', e.message)
+    console.error('Prérendu impossible:', e.message)
+    process.exitCode = 1
   } finally {
     await vite.close()
   }
