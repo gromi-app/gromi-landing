@@ -52,9 +52,9 @@
     event.preventDefault();
     if ($('save').disabled) return;
     const password = $('password').value;
-    if (password.length < 6 || password !== $('confirmation').value) {
+    if (password.length < 8 || password !== $('confirmation').value) {
       $('form-error').hidden = false;
-      $('form-error').textContent = password.length < 6 ? 'Choisis au moins 6 caractères.' : 'Les deux mots de passe doivent être identiques.';
+      $('form-error').textContent = password.length < 8 ? 'Choisis au moins 8 caractères.' : 'Les deux mots de passe doivent être identiques.';
       return;
     }
     $('save').disabled = true;
