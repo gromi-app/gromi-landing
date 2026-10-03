@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { supabase } from "./supabase.js";
+import DownloadPopup from "./DownloadPopup.jsx";
 
 const GROMI_IMG = "/gromi-logo-2026.png";
 
@@ -399,6 +400,7 @@ export default function LandingPage({ initialPath = "/" }) {
 
   return (
     <div style={{ fontFamily: "'Quicksand', system-ui, sans-serif", color: "#463B33", background: "#FFFFFF", minHeight: "100vh" }}>
+      <DownloadPopup />
       <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       <style>{`*{margin:0;padding:0;box-sizing:border-box}a{color:inherit;text-decoration:none}input:focus{outline:none}
         @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
