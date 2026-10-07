@@ -403,6 +403,7 @@ export default function LandingPage({ initialPath = "/" }) {
       <DownloadPopup />
       <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       <style>{`*{margin:0;padding:0;box-sizing:border-box}a{color:inherit;text-decoration:none}input:focus{outline:none}
+        .desktop-qr{display:none}@media(min-width:901px){.desktop-qr{display:block}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
         .fu1{animation:fadeUp .8s ease forwards}.fu2{animation:fadeUp .8s ease .15s forwards;opacity:0}.fu3{animation:fadeUp .8s ease .3s forwards;opacity:0}.fu4{animation:fadeUp .8s ease .45s forwards;opacity:0}
       `}</style>
@@ -411,9 +412,16 @@ export default function LandingPage({ initialPath = "/" }) {
         <Blob size={200} color={P.rose} top={-60} left={-80} />
         <Center max={660}>
           <Gromi size={110} />
-          <h1 style={{ fontSize: "clamp(29px, 6vw, 46px)", lineHeight: 1.18, marginTop: 20 }}>Apprendre ensemble,<br /><span>sans écran pour votre enfant.</span></h1>
-          <p style={{ fontSize: 18, margin: "22px auto", lineHeight: 1.7 }}>Vous lisez les consignes sur votre téléphone, puis partagez l’activité avec votre enfant. Papier, feutres, stylos, ballon, oreillers… Du matériel courant de la maison, pour apprendre et évoluer ensemble.</p>
-          <p style={{ marginBottom: 28, fontWeight: 700 }}>Pour les parents d’enfants de 3 mois à 10 ans et 11 mois.</p>
+          <p style={{ fontSize: 14, fontWeight: 700, marginTop: 20 }}>Gromi est disponible sur iPhone</p>
+          <h1 style={{ fontSize: "clamp(29px, 6vw, 46px)", lineHeight: 1.18, marginTop: 14 }}>Faites le bilan gratuit de votre enfant</h1>
+          <p style={{ fontSize: 18, margin: "22px auto", lineHeight: 1.7 }}>Puis des activités à partager avec lui, adaptées à son âge, avec ce que vous avez déjà à la maison. De 3 mois à 10 ans et 11 mois.</p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 32, margin: "28px 0 20px" }}>
+            <a href="https://apps.apple.com/app/apple-store/id6815285991?pt=1294677542&ct=site&mt=8" style={{ display: "inline-block", padding: 14 }}><img src="/app-store-fr.svg" alt="Télécharger dans l’App Store" style={{ display: "block", height: 56, width: "auto", maxWidth: "100%" }} /></a>
+            {/* Emplacement du badge officiel Google Play : activer à la sortie Android. */}
+            <span id="google-play-badge" hidden />
+            <figure className="desktop-qr"><img src="/gromi-qr.png" alt="QR code vers https://gromi.fr/qr" width="116" height="116" style={{ display: "block", margin: "0 auto", borderRadius: 8 }} /><figcaption style={{ fontSize: 12, marginTop: 8 }}>Scannez avec votre téléphone</figcaption></figure>
+          </div>
+          <p style={{ fontSize: 13, lineHeight: 1.7, marginBottom: 24 }}>Créée par une psychomotricienne diplômée d'État · Plus de 9 000 activités · Rien à acheter, rien à imprimer</p>
           <EmailBox {...boxProps} />
           <p style={{ fontSize: 13, marginTop: 12 }}>Application en préparation · Inscription gratuite à l’alerte de lancement</p>
           <a href="/cahiers/" style={{ display: "inline-block", marginTop: 20, padding: "14px 20px", borderRadius: 16, background: "#FFF0E5", color: "#214E78", fontWeight: 800 }}>Découvrir les cahiers gratuits</a>

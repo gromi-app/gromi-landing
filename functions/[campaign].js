@@ -4,7 +4,7 @@
  *
  * PT : identifiant fournisseur Apple, ex. "123456" (laisser vide en attendant).
  * PLAY_STORE : URL complète Google Play (laisser vide pour revenir à l'accueil).
- * /app n'ajoute pas de ct ; les huit autres chemins ajoutent leur nom.
+ * /app n'ajoute pas de ct ; les autres chemins ajoutent leur nom.
  * Les paramètres entrants ne sont pas recopiés dans les destinations.
  *
  * Limite HTTP : un iPad utilisant le même User-Agent qu'un Mac est
@@ -18,7 +18,7 @@ const APP_STORE = "https://apps.apple.com/app/id6815285991";
 const HOME = "https://gromi.fr/";
 const PATHS = new Set([
   "app", "tiktok", "insta", "youtube", "facebook",
-  "mail", "livre", "cahier", "partage",
+  "mail", "livre", "cahier", "partage", "qr",
 ]);
 
 export function onRequest(context) {
