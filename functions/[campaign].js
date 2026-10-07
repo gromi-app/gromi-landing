@@ -11,7 +11,7 @@
  * indiscernable côté serveur et suit donc la destination ordinateur.
  * Les autres pages et les formulaires continuent leur traitement habituel.
  */
-const PT = "";
+const PT = "1294677542";
 const PLAY_STORE = "";
 
 const APP_STORE = "https://apps.apple.com/app/id6815285991";
